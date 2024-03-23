@@ -1,5 +1,5 @@
 ---
-title: "Mahjong Detection with Yolo"
+title: "Mahjong Detection with Yolo (Draft, Work in Progress)"
 description: 
 date: 2024-03-23T14:01:37Z
 image: 
