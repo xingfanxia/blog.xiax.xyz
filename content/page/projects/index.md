@@ -1,6 +1,6 @@
 ---
 title: Projects
-comments: false
+comments: true
 ---
 
 ## Recent Projects

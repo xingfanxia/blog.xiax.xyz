@@ -13,7 +13,15 @@ name = "Projects"
 url = "/projects"
 [main.params]
 icon = "code"
-newtab = true
+newtab = false
+
+[[main]]
+identifier = "apps"
+name = "Apps"
+url = "/apps"
+[main.params]
+icon = "box"
+newtab = false
 
 [[social]]
 identifier = "github"
@@ -30,5 +38,35 @@ url = "https://www.linkedin.com/in/xingfanxia/"
 
 [social.params]
 icon = "brand-linkedin"
+
+[[social]]
+
+[[social]]
+identifier = "instagram"
+name = "mysite"
+url = "https://xiax.xyz"
+
+[social.params]
+icon = "palette"
+
+[[social]]
+
+[[social]]
+identifier = "instagram"
+name = "instagram"
+url = "https://instagram.com/kamikaze.hex"
+
+[social.params]
+icon = "instagram"
+
+[[social]]
+
+[[social]]
+identifier = "lightroom"
+name = "lightroom"
+url = "https://lightroom.adobe.com/u/xingfanxia"
+
+[social.params]
+icon = "camera"
 
 [[social]]
