@@ -7,6 +7,14 @@
 #icon = "home"
 #newtab = true
 
+[[main]]
+identifier = "projects"
+name = "Projects"
+url = "/projects"
+[main.params]
+icon = "code"
+newtab = true
+
 [[social]]
 identifier = "github"
 name = "GitHub"
@@ -21,4 +29,6 @@ name = "linkedin"
 url = "https://www.linkedin.com/in/xingfanxia/"
 
 [social.params]
-icon = "brand-twitter"
+icon = "brand-linkedin"
+
+[[social]]

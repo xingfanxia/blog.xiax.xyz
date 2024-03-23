@@ -6,17 +6,16 @@ image:
 math: 
 license: 
 hidden: false
-comments: false
+comments: true
 draft: false
 tags:
-    - system_design
-    - interview
     - technical_interview
+    - system_design
 categories:
-    - system_design
     - technical_interview
-    - interview
+    - system_design
 ---
+# System Design Interview Framework from Alex Xu
 
 ## **Step 1 - Understand the problem and establish design scope**
 
