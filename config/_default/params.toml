@@ -81,7 +81,7 @@ provider = "disqus"
 [comments.disqusjs]
 shortname = ""
 apiUrl = ""
-apiKey = ""
+apiKey = "ZBie19Jvr0aN9BtLKZ8PCdoo6pPqESXFY7LhFZbf2Vzi4QTDEYGgFY7LeCzlKBO4"
 admin = ""
 adminLabel = ""
 
