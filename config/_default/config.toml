@@ -1,8 +1,8 @@
 # Change baseurl before deploy
-baseurl = "https://demo.stack.jimmycai.com"
+baseurl = "https://blog.xiax.xyz"
 languageCode = "en-us"
 paginate = 5
-title = "Random Thoughts from a Cat Entertainer"
+title = "Random Thoughts From A Cat Entertainer"
 
 # Theme i18n support
 # Available values: en, fr, id, ja, ko, pt-br, zh-cn, zh-tw, es, de, nl, it, th, el, uk, ar

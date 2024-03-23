@@ -5,7 +5,7 @@ rssFullContent = true
 favicon = "/favicon.png"
 
 [footer]
-since = 2020
+since = 2024
 customText = ""
 
 [dateFormat]
@@ -14,12 +14,12 @@ lastUpdated = "Jan 02, 2006 15:04 MST"
 
 [sidebar]
 emoji = "🍥"
-subtitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+subtitle = "Engineer | Cat Entertainer | Photographer | Gamer"
 
 [sidebar.avatar]
 enabled = true
 local = true
-src = "img/avatar.png"
+src = "img/avatar.jpeg"
 
 [article]
 math = false
@@ -79,7 +79,7 @@ enabled = true
 provider = "disqus"
 
 [comments.disqusjs]
-shortname = ""
+shortname = "blog-xiax-xyz"
 apiUrl = ""
 apiKey = "ZBie19Jvr0aN9BtLKZ8PCdoo6pPqESXFY7LhFZbf2Vzi4QTDEYGgFY7LeCzlKBO4"
 admin = ""
