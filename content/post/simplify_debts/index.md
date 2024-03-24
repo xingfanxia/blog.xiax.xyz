@@ -2,7 +2,7 @@
 title: "How to recreate Split Wise's Simplify Debt Feature? (Draft, Work in Progress) " 
 description: 
 date: 2024-03-23T14:01:53Z
-image: 
+image: split_wise.png
 math: 
 license: 
 hidden: false

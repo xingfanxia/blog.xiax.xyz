@@ -2,7 +2,7 @@
 title: "System Design Interview Framework"
 description: 
 date: 2024-03-23T11:50:35Z
-image: 
+image: banner.jpg
 math: 
 license: 
 hidden: false
