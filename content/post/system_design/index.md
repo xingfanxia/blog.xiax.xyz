@@ -9,11 +9,11 @@ hidden: false
 comments: true
 draft: false
 tags:
-    - technical_interview
-    - system_design
+    - alex xu
+    - system design
 categories:
-    - technical_interview
-    - system_design
+    - technical interview
+    - system design
 ---
 # System Design Interview Framework from Alex Xu
 
