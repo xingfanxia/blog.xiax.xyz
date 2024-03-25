@@ -1,0 +1,807 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Hadoop on A Cat Entertainer</title><link>https://blog.xiax.xyz/tags/hadoop/</link><description>Recent content in Hadoop on A Cat Entertainer</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 25 Mar 2024 06:23:23 -0700</lastBuildDate><atom:link href="https://blog.xiax.xyz/tags/hadoop/index.xml" rel="self" type="application/rss+xml"/><item><title>Big Data System Design Pinterest</title><link>https://blog.xiax.xyz/p/big-data-system-design-pinterest/</link><pubDate>Mon, 25 Mar 2024 06:23:23 -0700</pubDate><guid>https://blog.xiax.xyz/p/big-data-system-design-pinterest/</guid><description>&lt;img src="https://blog.xiax.xyz/p/big-data-system-design-pinterest/Pinterest-2-1024x500.png" alt="Featured image of post Big Data System Design Pinterest" />&lt;h1 id="how-to-design-the-image-recommendation-engine-for-pinterest">How to Design the Image Recommendation Engine for Pinterest&lt;/h1>
+&lt;h1 id="intro">Intro&lt;/h1>
+&lt;p>We&amp;rsquo;re tasked with designing a scalable image recommendation system for Pinterest. It leverages the latest in big data and machine learning technologies, such as Kafka, Flink, Spark, Hadoop, Iceberg, Airflow, and Presto.&lt;/p>
+&lt;h2 id="assumptions-for-the-technical-workflow">Assumptions for the Technical Workflow:&lt;/h2>
+&lt;ul>
+&lt;li>Pinterest&amp;rsquo;s platform gathers millions of user interactions every day, including image views, saves, comments, and likes.&lt;/li>
+&lt;li>The image recommendation engine must adapt quickly to a user&amp;rsquo;s changing interests and provide real-time, personalized content.&lt;/li>
+&lt;/ul>
+&lt;h2 id="overall-architecture-design">Overall Architecture Design&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">User&lt;/span> &lt;span class="n">Apps&lt;/span> &lt;span class="o">&amp;amp;&lt;/span> &lt;span class="n">Web&lt;/span> &lt;span class="n">Browsers&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">     &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">     &lt;span class="o">|&lt;/span> &lt;span class="n">Publish&lt;/span> &lt;span class="n">user&lt;/span> &lt;span class="n">interactions&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">clicks&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">views&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">etc&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">     &lt;span class="n">v&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">    &lt;span class="n">Kafka&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">     &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">     &lt;span class="o">|&lt;/span> &lt;span class="n">User&lt;/span> &lt;span class="n">interactions&lt;/span> &lt;span class="n">stream&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">     &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">     &lt;span class="n">v&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">    &lt;span class="n">Flink&lt;/span> &lt;span class="o">--------------&amp;gt;&lt;/span> &lt;span class="n">Perform&lt;/span> &lt;span class="n">real&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">time&lt;/span> &lt;span class="n">processing&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">update&lt;/span> &lt;span class="n">recommendation&lt;/span> &lt;span class="n">models&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">     &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">     &lt;span class="o">|&lt;/span> &lt;span class="n">Write&lt;/span> &lt;span class="n">Flink&lt;/span> &lt;span class="n">results&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">     &lt;span class="n">v&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">    &lt;span class="n">Hadoop&lt;/span> &lt;span class="o">&amp;lt;---&amp;gt;&lt;/span> &lt;span class="n">Iceberg&lt;/span> &lt;span class="o">&amp;lt;-------------&lt;/span> &lt;span class="n">Airflow&lt;/span> &lt;span class="n">coordinating&lt;/span> &lt;span class="n">batch&lt;/span> &lt;span class="n">jobs&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">     &lt;span class="o">|&lt;/span>        &lt;span class="o">|&lt;/span> &lt;span class="n">Tables&lt;/span>                 &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">     &lt;span class="o">|&lt;/span>        &lt;span class="o">|&lt;/span>                         &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">     &lt;span class="o">|&amp;lt;--&lt;/span> &lt;span class="n">Batch&lt;/span> &lt;span class="n">Processing&lt;/span> &lt;span class="o">&amp;amp;&lt;/span> &lt;span class="n">ETL&lt;/span> &lt;span class="n">via&lt;/span> &lt;span class="n">Spark&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">     &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">     &lt;span class="o">|&lt;/span> &lt;span class="n">SQL&lt;/span> &lt;span class="n">queries&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">deep&lt;/span> &lt;span class="n">analytics&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">     &lt;span class="n">v&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Presto&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">     &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">     &lt;span class="o">|&lt;/span> &lt;span class="n">Visualization&lt;/span> &lt;span class="o">&amp;amp;&lt;/span> &lt;span class="n">Data&lt;/span> &lt;span class="n">Exploration&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">     &lt;span class="n">v&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Business&lt;/span> &lt;span class="n">Analysts&lt;/span> &lt;span class="o">&amp;amp;&lt;/span> &lt;span class="n">Data&lt;/span> &lt;span class="n">Scientists&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;pre class="mermaid">graph TB
+    UA[User Apps &amp; Web Browsers] -->|Publish user interactions| K[Kafka]
+    K -->|User interactions stream| F[Flink]
+    F -->|Real-time processing| OS[Recommendation System]
+    F -->|Write real-time results| H[Hadoop]
+    
+    SP[Spark for Batch Analysis &amp; Machine Learning] --> H
+    A[Airflow] -->|Schedule &amp; orchestrate| SP
+    
+    H -->|Data stored in| I[Iceberg Tables]
+    
+    P[Presto] -->|SQL analytics queries| I
+    
+    B[Business Analysts &amp; Data Scientists] -->|Visualization &amp; Data Exploration| P
+    
+    %% Increase fontsize for all nodes
+    classDef default fontsize:20px, color:#000, fill:#fff, stroke:#000;
+&lt;/pre>
+&lt;h3 id="technical-workflow">Technical Workflow:&lt;/h3>
+&lt;h3 id="1-data-ingestion-apache-kafka">1. Data Ingestion (Apache Kafka):&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Kafka Producers&lt;/strong>: Embed in the Pinterest app and web client. They serialize user activities into compact JSON or Avro formats and send events to &lt;code>user-interactions&lt;/code> topics, partitioned principally by user ID for efficient stream processing.&lt;/li>
+&lt;li>&lt;strong>Kafka Brokers&lt;/strong>: Set up with topic partitions for redundancy and parallelism, and to ensure high availability and durability of the user interaction events. The partitioning allows for horizontal scalability in the face of increasing data volumes.&lt;/li>
+&lt;/ul>
+&lt;h3 id="2-real-time-stream-processing-apache-flink">2. Real-time Stream Processing (Apache Flink):&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Streaming Jobs in Flink&lt;/strong>: These jobs use Flink&amp;rsquo;s rich CEP (Complex Event Processing) library to identify patterns of user interactions. They might capture sequences like frequent views of a particular image category, which triggers an immediate update to the user&amp;rsquo;s real-time recommendation profile.&lt;/li>
+&lt;li>&lt;strong>Real-time Recommendation Model Updates&lt;/strong>: Take advantage of Flink&amp;rsquo;s state management to quickly adjust recommendation models. These models are stored in state backends, with Flink ensuring fault tolerance using its snapshot and checkpoint mechanisms.&lt;/li>
+&lt;/ul>
+&lt;h3 id="3-batch-processing-and-analysis-apache-spark">3. Batch Processing and Analysis (Apache Spark):&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Feature Extraction and Machine Learning&lt;/strong>: Utilize Spark MLlib to periodically train collaborative filtering, clustering, and deep learning models. These models consume significant amounts of image metadata, user demographic information, and historical interaction logs to improve recommendation accuracy.&lt;/li>
+&lt;li>&lt;strong>Data Preprocessing and ETL Jobs&lt;/strong>: Regularly extract, transform, and load fresh data from HDFS into the format required by machine learning models, performed by Spark&amp;rsquo;s SQL and Dataframe/Dataset APIs.&lt;/li>
+&lt;/ul>
+&lt;h3 id="4-workflow-orchestration-apache-airflow">4. Workflow Orchestration (Apache Airflow):&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Machine Learning Pipeline Coordination&lt;/strong>: Use Airflow to manage dependencies among batch jobs, which includes pre-processing data, re-training recommendation models, and updating the production model serving layer.&lt;/li>
+&lt;li>&lt;strong>Data Pipeline Monitoring&lt;/strong>: Allows for monitoring and scheduling of regular ETL jobs and ensures that model training occurs on an updated dataset.&lt;/li>
+&lt;/ul>
+&lt;h3 id="5-data-storage-hadoop--apache-iceberg">5. Data Storage (Hadoop + Apache Iceberg):&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Raw Data Storage in HDFS&lt;/strong>: Acts as the central repository store for raw event data, user profiles, and image metadata. Optimized for sequential access patterns and leverages Hadoop&amp;rsquo;s robust data replication for fault tolerance.&lt;/li>
+&lt;li>&lt;strong>Curated Data Layers with Iceberg&lt;/strong>: Iceberg tables store derived views, aggregated metrics, and machine learning features, optimizing the most common access patterns and providing ACID transactions to keep analytical data consistent even during updates.&lt;/li>
+&lt;/ul>
+&lt;h3 id="6-interactive-querying-presto">6. Interactive Querying (Presto):&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Ad-Hoc Queries and Analysis&lt;/strong>: Presto allows data scientists to quickly explore datasets and run ad-hoc analytical queries which help in identifying new trends. They can perform joins across various Iceberg tables containing user interactions, image features, and models&amp;rsquo; output scores.&lt;/li>
+&lt;/ul>
+&lt;h3 id="7-data-lifecycle-and-schema-management">7. Data Lifecycle and Schema Management:&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Data Retention Policies&lt;/strong>: Implemented within Kafka and HDFS to manage and age data, ensuring storage costs are optimized without compromising the ability to retrain historical models.&lt;/li>
+&lt;li>&lt;strong>Schema Evolution in Iceberg&lt;/strong>: Provides flexibility in evolving metadata structures and data schema as the formats of user interactions and image representations change over time.&lt;/li>
+&lt;/ul>
+&lt;h3 id="8-advanced-machine-learning-and-analytics-spark--mllib">8. Advanced Machine Learning and Analytics (Spark + MLlib):&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Model Training and Evaluation&lt;/strong>: Utilizes large-scale, distributed processing capabilities of Spark to handle the computationally intensive task of machine learning model training, feature engineering, and historical data analysis.&lt;/li>
+&lt;/ul>
+&lt;h3 id="9-monitoring-and-governance">9. Monitoring and Governance:&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Comprehensive Monitoring&lt;/strong>: Collects metrics and logs from Kafka, Flink, Spark, and Presto jobs using tools like Prometheus and ELK Stack. These metrics are vital for identifying processing bottlenecks and ensuring the reliability of the data pipelines.&lt;/li>
+&lt;li>&lt;strong>Data Governance and Compliance&lt;/strong>: Implemented across all data stores, with policies enforced to maintain data privacy, access controls, audit logging, and lineage tracking through tools like Apache Atlas and Ranger.&lt;/li>
+&lt;/ul>
+&lt;h2 id="technical-detail-followups">Technical Detail Followups&lt;/h2>
+&lt;h3 id="kafka">Kafka&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Q:&lt;/strong>
+How does the Kafka architecture handle failures and ensure message durability?
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong>&lt;/p>
+&lt;p>Kafka uses a distributed commit log, where messages are appended and replicated across multiple brokers. Durability is ensured through these replications; if one broker fails, the others can provide the data. Kafka also uses a write-ahead log to disk, so messages are not lost in case of a system crash. A combination of in-sync replicas and acknowledgments from producers upon writes further fortifies the reliability of the message delivery.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="flink">Flink&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Q:&lt;/strong>
+Can you expand on how Flink&amp;rsquo;s state management supports the real-time image recommendation feature?
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong>&lt;/p>
+&lt;p>Flink&amp;rsquo;s state management allows for the retention of relevant context during processing. For example, it can keep track of the current state of a user&amp;rsquo;s interaction pattern or a model&amp;rsquo;s parameters. This state is consistently checkpointed and stored in a persistent storage like HDFS or Amazon S3, so if there&amp;rsquo;s a failure, the application can resume from the latest successful checkpoint, minimizing data loss and computation.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="spark">Spark&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Q:&lt;/strong>
+How does Spark handle the iterative computation required for machine learning algorithms used in image recommendations?
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong>&lt;/p>
+&lt;p>Spark&amp;rsquo;s core abstraction, the Resilient Distributed Dataset (RDD), is well suited for iterative algorithms common in machine learning. This is because once an RDD is loaded into memory, it&amp;rsquo;s kept there for as long as necessary, drastically speeding up iterative data passes essential for algorithms like gradient descent. Spark&amp;rsquo;s MLlib also optimizes algorithms for distributed computing, partitioning the data across nodes to parallelize computations.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="airflow">Airflow&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Q:&lt;/strong>
+How does Apache Airflow help managing dependencies in the ETL workflows for the recommendation engine?
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong>&lt;/p>
+&lt;p>In Airflow, workflows are expressed as DAGs, with each node representing a task and the edges representing dependencies between these tasks. Airflow can manage scheduling and running these tasks based on the specified dependencies, and it supports complex workflows where the execution order of tasks is critical. It also retries failed tasks, sends alerts, and can dynamically adjust workflows based on parameters or external triggers.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="hadoop--iceberg">Hadoop &amp;amp; Iceberg&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Q:&lt;/strong>
+Describe how Hadoop and Apache Iceberg work together to manage the large datasets in this application.
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong>&lt;/p>
+&lt;p>Hadoop provides the distributed storage (HDFS) and computing resources (YARN) needed to manage and process large-scale datasets, while Apache Iceberg integrates with HDFS to manage these datasets as structured tables. Iceberg adds layers like snapshotting, schema evolution, and transactional capabilities on top of the raw file system, which allows for efficient updates and querying of massive tables within HDFS.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="presto">Presto&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Q:&lt;/strong>
+What specific features of Presto make it a fit for the interactive querying requirements of data scientists?
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong>&lt;/p>
+&lt;p>Presto&amp;rsquo;s in-memory distributed query engine is designed for low-latency, interactive data analysis. It supports complex SQL queries, including aggregations, joins, and window functions that are essential for data scientists to explore and analyze big data quickly. Its ability to query data where it lives, without the need for data movement or transformation, streamlines analysis and reduces time to insight.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="data-lifecycle-and-schema-management">Data Lifecycle and Schema Management&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Q:&lt;/strong>
+Can you delve into the specifics of how schema evolution is handled in a pipeline with mixed batch and real-time components?
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong>&lt;/p>
+&lt;p>Schema evolution must be managed carefully to ensure compatibility across different data models used by batch and real-time systems. Iceberg helps manage this by allowing schema changes to occur without downtime or requiring a rewrite of data. It maintains a history of schemas and supports schema enforcement and evolution with backward and forward compatibility. Data produced by real-time Flink jobs can evolve, and batch-based Spark jobs can accommodate these changes, as both can interact with the updated schema without interrupt to ongoing operations.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="advanced-machine-learning-and-analytics">Advanced Machine Learning and Analytics&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Q:&lt;/strong>
+Explain the process of feature engineering for images in Spark and how it contributes to recommendation quality.
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong>&lt;/p>
+&lt;p>Feature engineering in Spark for images involves extracting meaningful information from raw image data that can be used to train recommendation models. Using Spark&amp;rsquo;s MLlib, we could perform tasks like resizing images, normalizing pixel values, and extracting color histograms or texture patterns. MLlib can also be used to apply more sophisticated techniques like deep learning to extract higher-level features. These engineered features are critical for training effective recommendation models that can distinguish between different types of images and user preferences.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="monitoring-and-governance">Monitoring and Governance&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Q:&lt;/strong>
+How does the monitoring infrastructure support the operational stability of the image recommendation service?
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong>&lt;/p>
+&lt;p>The monitoring infrastructure collects metrics and logs from all components of the pipeline. With tools like Prometheus, we can track system performance metrics in real time and set up alerts to notify if certain thresholds are exceeded. The ELK Stack is used for log analysis, which helps in diagnosing system problems and understanding user behavior. Together, they ensure the operational stability of the service by allowing us to rapidly identify and address issues as they arise, ensuring a smooth user experience.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="design-choice-follow-ups">Design Choice Follow ups&lt;/h2>
+&lt;p>Here are more detailed Q&amp;amp;A examples focusing on the context of a real-world Pinterest-like image recommendation system, weighing the pros and cons of utilized technologies, and discussing alternatives:&lt;/p>
+&lt;h3 id="kafka-1">Kafka&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Q:&lt;/strong>
+Why choose Kafka over other messaging systems for real-time user interaction data ingestion?
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong>&lt;/p>
+&lt;p>Kafka is highly scalable and durable, making it ideal for handling the high-volume and high-velocity data streams produced by Pinterest&amp;rsquo;s user interaction events. Its distributed nature and partitioned topics provide fault tolerance and low-latency, which are crucial for real-time recommendation systems.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Cons:&lt;/strong>&lt;/p>
+&lt;p>Kafka can be complex to set up and operate, particularly regarding cluster management and monitoring.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Alternatives:&lt;/strong>&lt;/p>
+&lt;p>Apache Pulsar is an alternative that can offer similar scalability and durability, with native support for multi-tenancy and geo-replication, which could be beneficial for a global platform like Pinterest.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="flink-1">Flink&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Q:&lt;/strong>
+What makes Flink the preferred choice for real-time recommendation updates and not other stream processing frameworks?
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong>&lt;/p>
+&lt;p>Flink&amp;rsquo;s ability to handle complex event processing and maintain rich state management is unmatched. This enables more sophisticated real-time recommendation model updates and user interaction pattern analysis.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Cons:&lt;/strong>&lt;/p>
+&lt;p>Flink&amp;rsquo;s complex event processing capabilities might be overkill for simpler interaction patterns or where latency is less of a concern.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Alternatives:&lt;/strong>&lt;/p>
+&lt;p>Apache Storm is a simpler alternative for stream processing that can be considered if the processing needs are less complex. For tightly integrated Kafka environments, Kafka Streams might suffice for lightweight, real-time processing tasks.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="spark-1">Spark&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Q:&lt;/strong>
+In the context of feature extraction and machine learning for image recommendations, what are Spark&amp;rsquo;s advantages and disadvantages?
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong>&lt;/p>
+&lt;p>Spark&amp;rsquo;s MLlib for machine learning and its overall ecosystem for big data processing makes it versatile for handling the ETL, feature extraction, and model training workloads. It is efficient at iterative computation, which is essential in training machine learning models.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Cons:&lt;/strong>&lt;/p>
+&lt;p>Spark&amp;rsquo;s in-memory processing model can be expensive, especially when dealing with very large datasets, as it requires a large amount of RAM.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Alternatives:&lt;/strong>&lt;/p>
+&lt;p>Hadoop MapReduce can be a more cost-effective batch processing alternative in environments that are not latency-sensitive. For deep learning specific tasks, frameworks like TensorFlow or PyTorch could be integrated for GPU-accelerated processing.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="airflow-1">Airflow&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Q:&lt;/strong>
+What features does Airflow offer over other workflow management tools?
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong>&lt;/p>
+&lt;p>Airflow provides an expressive framework for defining complex dependencies and schedules in data processing pipelines. Its user-friendly UI and extensive monitoring capabilities make managing workflows much more straightforward.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Cons:&lt;/strong>&lt;/p>
+&lt;p>Airflow can be resource-intensive and has a steeper learning curve, particularly for those unfamiliar with Python.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Alternatives:&lt;/strong>&lt;/p>
+&lt;p>Luigi is a simpler Python-based workflow engine that might be appropriate for smaller-scale or less complex workflows. Apache NiFi offers a more GUI-driven approach for data flow management and could be preferable for teams looking for less code-intensive solutions.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="hadoop--iceberg-1">Hadoop &amp;amp; Iceberg&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Q:&lt;/strong>
+Are there any drawbacks to using Hadoop and Iceberg, and what other systems could be used?
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong>&lt;/p>
+&lt;p>Hadoop&amp;rsquo;s HDFS is proven, reliable, and integrates well with big data processing tools. However, it might not be as cost-effective for storage compared to cloud object stores and is complex to manage. Iceberg provides excellent table management features, but is relatively new and has less community support compared to more mature tools.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Cons:&lt;/strong>&lt;/p>
+&lt;p>Hadoop cluster requires significant setup and maintenance efforts. Iceberg is not as battle-tested as other formats and may still be evolving.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Alternatives:&lt;/strong>&lt;/p>
+&lt;p>Cloud-based storage options like Amazon S3 or Azure Data Lake Storage offer similar scalability with lower operational overhead. Delta Lake is an alternative to Iceberg that provides similar ACID guarantees and seamless integration with Databricks’ platform.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="presto-1">Presto&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Q:&lt;/strong>
+Presto is used for interactive querying, but what factors should we consider when choosing it, and are there any competitive technologies?
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong>&lt;/p>
+&lt;p>Presto&amp;rsquo;s distributed architecture allows for fast query execution over large datasets, which is critical for data exploration and timely insights. However, for very large-scale data warehousing tasks and complex query workloads, Presto may not perform as well as dedicated solutions.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Cons:&lt;/strong>&lt;/p>
+&lt;p>Presto may not handle long-running analytical queries as effectively due to its design for ad-hoc querying. Also, it could be less cost-effective for persistent workloads.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Alternatives:&lt;/strong>&lt;/p>
+&lt;p>Apache Drill supports similar SQL queries on large-scale data but can be more forgiving on resource demands. Amazon Athena and Google BigQuery offer serverless querying options for those already invested in the respective cloud ecosystems.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul></description></item><item><title>Big Data System Design Uber Eats</title><link>https://blog.xiax.xyz/p/big-data-system-design-uber-eats/</link><pubDate>Mon, 25 Mar 2024 05:40:03 -0700</pubDate><guid>https://blog.xiax.xyz/p/big-data-system-design-uber-eats/</guid><description>&lt;img src="https://blog.xiax.xyz/p/big-data-system-design-uber-eats/Uber_Eats_Logo.jpg" alt="Featured image of post Big Data System Design Uber Eats" />&lt;h1 id="how-to-design-the-data-infra-for-uber-eats-order-tracking-page">How to Design the Data Infra for Uber Eats Order Tracking Page&lt;/h1>
+&lt;h1 id="intro">Intro&lt;/h1>
+&lt;p>A real world example to build scalable data analytics with tools like Kafka, Flink, Spark, Presto, Airflow, Iceberg, etc. Let&amp;rsquo;s delve into a more technical scenario that incorporates Kafka, Flink, Spark, Hadoop, Iceberg, Airflow, and Presto into a comprehensive real-time data processing and analytics pipeline:&lt;/p>
+&lt;h2 id="assumptions-for-the-technical-workflow">Assumptions for the Technical Workflow:&lt;/h2>
+&lt;ul>
+&lt;li>An Uber Eats-like app tracks the location of drivers and communicates order details to users.&lt;/li>
+&lt;li>The system must handle real-time processing, such as matching drivers with orders, and longer-term analytical processing, like optimizing driver routes and forecasting delivery times.&lt;/li>
+&lt;/ul>
+&lt;h2 id="overall-architecture-design">Overall Architecture Design&lt;/h2>
+&lt;h3 id="simple-architecture-diagram">Simple Architecture Diagram&lt;/h3>
+&lt;h4 id="ascii-style">Ascii Style&lt;/h4>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">Driver&lt;/span> &lt;span class="n">Apps&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|&lt;/span> &lt;span class="n">Publish&lt;/span> &lt;span class="n">GPS&lt;/span> &lt;span class="n">locations&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">v&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Kafka&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|&lt;/span>\
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">Driver&lt;/span> &lt;span class="n">locations&lt;/span> &lt;span class="n">stream&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|&lt;/span> &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|&lt;/span> &lt;span class="n">v&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|&lt;/span> &lt;span class="n">Flink&lt;/span> &lt;span class="o">----------&amp;gt;&lt;/span> &lt;span class="n">Compute&lt;/span> &lt;span class="n">aggregations&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">Join&lt;/span> &lt;span class="n">streams&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">Order&lt;/span> &lt;span class="n">events&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">Manage&lt;/span> &lt;span class="n">stateful&lt;/span> &lt;span class="n">processing&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">Stream&lt;/span> &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">v&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Order&lt;/span> &lt;span class="n">System&lt;/span> &lt;span class="o">&amp;amp;&lt;/span> &lt;span class="n">User&lt;/span> &lt;span class="n">Apps&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|&lt;/span> &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|&lt;/span> &lt;span class="n">Write&lt;/span> &lt;span class="n">Flink&lt;/span> &lt;span class="n">results&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">v&lt;/span> &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Hadoop&lt;/span> &lt;span class="o">&amp;lt;--------/&lt;/span> &lt;span class="o">&amp;lt;--------------&lt;/span> &lt;span class="n">Airflow&lt;/span> &lt;span class="n">orchestrating&lt;/span> &lt;span class="n">tasks&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|&lt;/span> &lt;span class="o">^&lt;/span> &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="n">Data&lt;/span> &lt;span class="n">written&lt;/span> &lt;span class="n">back&lt;/span> &lt;span class="n">by&lt;/span> &lt;span class="n">Spark&lt;/span> &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="ow">and&lt;/span> &lt;span class="n">other&lt;/span> &lt;span class="n">batch&lt;/span> &lt;span class="n">jobs&lt;/span> &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">v&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Iceberg&lt;/span> &lt;span class="n">Tables&lt;/span> &lt;span class="o">&amp;lt;---------------------+&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|&lt;/span> &lt;span class="n">SQL&lt;/span> &lt;span class="n">queries&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">analytics&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">v&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Presto&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|&lt;/span> &lt;span class="n">Visualization&lt;/span> &lt;span class="o">&amp;amp;&lt;/span> &lt;span class="n">Reporting&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">v&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Business&lt;/span> &lt;span class="n">Apps&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="mermaid-style">Mermaid Style&lt;/h4>
+&lt;pre class="mermaid">graph TB
+DA[Driver Apps] -->|Publish GPS locations| K[Kafka]
+K -->|Driver locations stream| F[Flink]
+K -->|Order events stream| F
+F -->|Real-time processing| OA[Order System &amp; User Apps]
+F -->|Write Flink results| H[Hadoop]
+SP[Spark for Batch Analysis] -->|Write batch results| H
+A[Airflow] -->|Schedule &amp; orchestrate| SP
+H -->|Data management| I[Iceberg Tables]
+P[Presto] -->|SQL queries| I
+B[Business Apps] -->|Visualization &amp; Reporting| P
+%% Define styling
+classDef default fontsize:16px, color:#fff, fill:#000, stroke:#fff, stroke-width:2px;
+linkStyle default stroke:white,stroke-width:1px;
+&lt;/pre>
+&lt;h3 id="technical-workflow">Technical Workflow:&lt;/h3>
+&lt;h3 id="1-data-ingestion-apache-kafka">1. Data Ingestion (Apache Kafka):&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Kafka Producers&lt;/strong>: The driver app constantly publishes GPS coordinates to a Kafka topic &lt;code>driver-locations&lt;/code>, using a producer client library. Each message might be keyed by driver ID to ensure location updates for a given driver go to the same partition for order.&lt;/li>
+&lt;li>&lt;strong>Kafka Consumers&lt;/strong>: Other systems subscribe to the &lt;code>driver-locations&lt;/code> topic to receive updates. Additionally, consumer applications are set up for topics like &lt;code>order-events&lt;/code> that handle order placement, acceptance, and completions.&lt;/li>
+&lt;li>Kafka topics are partitioned and replicated to ensure scalability and fault tolerance.&lt;/li>
+&lt;/ul>
+&lt;h3 id="2-real-time-stream-processing-apache-flink">2. Real-time Stream Processing (Apache Flink):&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Flink Jobs&lt;/strong>: Flink jobs are configured to subscribe to &lt;code>driver-locations&lt;/code> and &lt;code>order-events&lt;/code>. They perform tasks such as:
+&lt;ul>
+&lt;li>Windowed aggregations to compute the latest location of each driver.&lt;/li>
+&lt;li>Join operations between driver locations and pending orders to facilitate real-time matching and dispatching.&lt;/li>
+&lt;li>Stateful processing for ETA calculations and sending notifications to customers via external systems when a driver is nearby.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="3-batch-processing-and-analysis-apache-spark">3. Batch Processing and Analysis (Apache Spark):&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Spark Jobs&lt;/strong>: Scheduled batch Spark jobs are written in Scala or Python and deal with complex analytical tasks, including:
+&lt;ul>
+&lt;li>Training machine learning models on historical delivery data to predict delivery times (using MLlib).&lt;/li>
+&lt;li>Aggregating delivery data nightly to create performance metrics per driver or per region.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="4-workflow-orchestration-apache-airflow">4. Workflow Orchestration (Apache Airflow):&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Airflow DAGs (Directed Acyclic Graphs)&lt;/strong>: Define the dependent jobs and workflows that orchestrate processing tasks. An Airflow DAG might include:
+&lt;ul>
+&lt;li>A task to run a Spark job that rebuilds machine learning models.&lt;/li>
+&lt;li>Another task to batch-process the day&amp;rsquo;s data and update Iceberg tables.&lt;/li>
+&lt;li>Scheduling and triggering Flink jobs for real-time streaming when needed.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="5-data-storage-hadoop--apache-iceberg">5. Data Storage (Hadoop + Apache Iceberg):&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>HDFS&lt;/strong>: Raw data from Kafka is landed into HDFS, and processed data is stored there for long-term historical analysis.&lt;/li>
+&lt;li>&lt;strong>Iceberg Tables&lt;/strong>: Transactional data tables managed by Iceberg provide consistent snapshots of large-scale datasets and support schema evolution for the raw Kafka data and the results of Spark jobs.&lt;/li>
+&lt;/ul>
+&lt;h3 id="6-interactive-querying-presto">6. Interactive Querying (Presto):&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>Presto SQL Queries&lt;/strong>: Analysts use Presto to perform SQL queries on stored Hadoop data and Iceberg tables to gain insights or create real-time dashboards. Example queries might include:
+&lt;ul>
+&lt;li>SQL to join today&amp;rsquo;s real-time data with historical trends.&lt;/li>
+&lt;li>Aggregation queries to analyze delivery efficiency across different areas.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="7-data-lifecycle-and-schema-management">7. Data Lifecycle and Schema Management:&lt;/h3>
+&lt;ul>
+&lt;li>Iceberg table partitioning is configured for efficient data retrieval, e.g., by time window or geographical region.&lt;/li>
+&lt;li>Data retention policies are configured in Kafka to govern how long data is kept, considering storage costs and compliance requirements.&lt;/li>
+&lt;li>Iceberg&amp;rsquo;s schema evolution allows for seamless transitions when altering data structures or incorporating new data sources.&lt;/li>
+&lt;/ul>
+&lt;h3 id="8-advanced-machine-learning-and-analytics-spark--mllib">8. Advanced Machine Learning and Analytics (Spark + MLlib):&lt;/h3>
+&lt;ul>
+&lt;li>Historical data in Iceberg tables is used to train and refine predictive models for delivery ETA, taking advantage of features like lookback windows and seasonal trends.&lt;/li>
+&lt;li>Airflow DAGs keep model training and evaluations consistent, reproducible, and on schedule.&lt;/li>
+&lt;/ul>
+&lt;h3 id="9-monitoring-and-governance">9. Monitoring and Governance:&lt;/h3>
+&lt;ul>
+&lt;li>Comprehensive logging is set up for all components, including Kafka brokers, Flink job managers, and Spark driver/executor processes.&lt;/li>
+&lt;li>A monitoring solution (such as Prometheus with Grafana) watches over the health and performance of the infrastructure, ensuring SLAs are met.&lt;/li>
+&lt;li>Data governance is enforced via policies and access controls for sensitive data in HDFS and Iceberg, audited by tools such as Apache Ranger.&lt;/li>
+&lt;/ul>
+&lt;p>The synergy in such a technical workflow allows an Uber Eats-like service to leverage strengths from each tool — Kafka for ingestion, Flink for real-time processing, Spark for batch processing and ML, Airflow for orchestration, Iceberg for managing large-scale data tables, and Presto for interactive querying. This enables real-time communication to users and drivers while also providing a platform for advanced analytics and strategic decision-making based on historical and current data.&lt;/p>
+&lt;h2 id="technical-detail-followups">Technical Detail Followups&lt;/h2>
+&lt;h3 id="kafka">Kafka&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> How do you ensure data consistency in your Kafka cluster?&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>A:&lt;/strong> Kafka ensures data consistency by replicable partitions, where each partition has one leader and multiple in-sync replicas (ISRs). The leader handles all the read and write requests for that partition, and ISRs replicate the leader&amp;rsquo;s data. Consumers typically read from the leader to ensure they receive the most up-to-date records.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> Can you explain the role of Zookeeper in a Kafka ecosystem?&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>A:&lt;/strong> Zookeeper plays a critical role in Kafka&amp;rsquo;s architecture; it manages and coordinates Kafka brokers. It&amp;rsquo;s responsible for leader election for partitions, managing configuration information, and maintaining a list of Kafka brokers and topics, as well as their status.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="flink">Flink&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> What advantages does Flink provide when dealing with stateful computations?&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>A:&lt;/strong> Flink offers robust state management and fault tolerance for stateful computations in streaming data. It maintains a consistent snapshot of all state throughout an application’s execution, which can be recovered in case of a failure. Flink&amp;rsquo;s checkpointing and savepoints feature are key for ensuring exactly-once processing semantics.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> How does Flink handle event time and out-of-order events?&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>A:&lt;/strong> Flink features an event time concept that deals with the time at which events actually occurred, as opposed to when they are processed by the system. With watermarks, which are special types of events that specify the progress of event time, Flink is capable of handling out-of-order events or late-arriving data.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="spark">Spark&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> What is the difference between RDDs, DataFrames, and Datasets in Spark?&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>A:&lt;/strong> RDD (Resilient Distributed Dataset) is the fundamental data structure in Spark - an immutable distributed collection of objects that can be processed in parallel. DataFrames are a collection of RDDs, but with a schema, which provides a higher level abstraction and optimization opportunities through Catalyst optimizer. Datasets are a type-safe version of DataFrames, allowing users to work with strongly-typed data collected as JVM objects.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> How does Spark achieve fault tolerance?&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>A:&lt;/strong> Spark achieves fault tolerance through its immutable data structure and lineage graph. In case of a partition failure, Spark can recompute the lost partition by replaying the transformations used to build the lineage of the RDD. This significantly reduces the need for data replication for fault tolerance purposes.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="hadoop">Hadoop&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> What are some of the core components of a Hadoop ecosystem?&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>A:&lt;/strong> The core of Hadoop consists of the storage layer, HDFS (Hadoop Distributed File System), for reliable storage of massive datasets, and YARN (Yet Another Resource Negotiator), for cluster resource management, and the MapReduce programming model for processing large datasets in parallel.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> How is data stored and processed in Hadoop?&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>A:&lt;/strong> In Hadoop, data is stored in HDFS across a distributed file system that spans the nodes in a Hadoop cluster. Data is processed using a MapReduce job where the data is first mapped, sorted/shuffled, and then reduced to produce an output - each of these steps can run in parallel across the cluster&amp;rsquo;s nodes.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="iceberg">Iceberg&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> What is Apache Iceberg and how does it help with managing large data sets?&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>A:&lt;/strong> Apache Iceberg is a table format for large data sets that enables high-performance queries in distributed computing environments. It adds more structure and optimization to data storage, providing benefits like snapshot isolation, schema evolution, and efficient querying through hidden partitioning.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> Can Iceberg tables work with both batch and streaming data?&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>A:&lt;/strong> Yes, Iceberg tables are designed to support both batch and stream processing workloads seamlessly. They can be read and written to using traditional batch operations or incrementally using streaming workloads, thus, providing flexibility and ensuring up-to-date views of data.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="airflow">Airflow&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> What are the benefits of using Apache Airflow for workflow orchestration?&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>A:&lt;/strong> Apache Airflow provides a highly customizable platform for scheduling and coordinating complex data pipelines. It enables developers to define workflows as code, which allows for easy versioning, testing, and reusability. Its rich user interface aids in visualizing workflows, monitoring job progress, and diagnosing issues.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> How do you ensure that a task in Airflow is idempotent?&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>A:&lt;/strong> To make sure that a task in Airflow is idempotent - producing the same result regardless of how many times it’s executed - you&amp;rsquo;d structure your tasks so that the output depends solely on the inputs and the code at execution time. Also, using Airflow&amp;rsquo;s extensive logging and external systems for state management can help ensure idempotency.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="presto">Presto&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> Why would you use Presto over other SQL-on-Hadoop engines?&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>A:&lt;/strong> Presto is designed for low-latency queries and is generally faster than other SQL-on-Hadoop engines due to its distributed architecture and query execution strategies. Unlike others, Presto does not use MapReduce; it processes data using an in-memory pipeline execution model which is significantly faster.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> How does Presto interact with different data sources, such as Iceberg or Kafka?&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>A:&lt;/strong> Presto has a connector architecture that allows it to interact with various data sources. For Iceberg, the Presto Iceberg connector provides support for reading from and writing to Iceberg tables. For Kafka, the Presto Kafka connector allows Presto to query Kafka topics directly as if they were tables. This flexibility makes it easy to combine and query data across different storage systems.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="design-choice-follow-ups">Design Choice Follow ups&lt;/h2>
+&lt;h3 id="kafka-1">Kafka&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> Why Kafka for tracking driver locations in real time and not other systems like RabbitMQ or ActiveMQ?&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong> Kafka is built for high throughput and is capable of handling the vast volume of location updates generated by drivers—potentially millions of messages per second. Unlike RabbitMQ or ActiveMQ, Kafka excels at handling large streams of data efficiently, making it ideal for real-time analytics use cases. Also, Kafka&amp;rsquo;s durable storage model allows us to reprocess historical data if needed.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Pros:&lt;/strong>
+    - High throughput and scalability.
+    - Built-in partitioning and replication.
+    - Fault tolerance.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Cons:&lt;/strong>
+    - Complexity in setup and management.
+    - Broker-centric storage with less queuing flexibility.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Alternatives:&lt;/strong>
+    - RabbitMQ or Pulsar for simpler setups or additional messaging features but with potential scalability limitations.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="flink-1">Flink&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> Why use Apache Flink for real-time processing of driver locations?&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong> Flink provides low-latency, accurate stream processing, which is critical for the driver location updates to reach customers in a timely manner. It&amp;rsquo;s also good at handling stateful computations, like aggregating driver locations over windows of time. Apache Flink was chosen over alternatives like Apache Storm due to its greater throughput and ease of state management. However, we also considered Apache Kafka Streams for its tight integration with Kafka, but Flink offered more advanced windowing and state management features.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Pros:&lt;/strong>
+    - High performance and low latency.
+    - Advanced state management.
+    - Effective event-time handling.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Cons:&lt;/strong>
+    - Complexity for simpler stream processing needs.
+    - Possible overkill for less demanding tasks.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Alternatives:&lt;/strong>
+    - Apache Storm for competent stream processing or Kafka Streams for Kafka-centric applications.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="spark-1">Spark&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> Why is Apache Spark preferred for batch processing and ML over other frameworks?&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong> Spark provides a robust MLlib for machine learning, which we use to predict delivery times. It&amp;rsquo;s optimized for iterative algorithms, such as those used in machine learning, and its in-memory computing capabilities speed up processing. This makes it highly effective for our driver location data analysis. An alternative could be Hadoop MapReduce, but it&amp;rsquo;s a lot slower and less suited for complex analytics and ML tasks that Spark excels at.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Pros:&lt;/strong>
+    - Fast performance with in-memory computing.
+    - Comprehensive MLlib for machine learning tasks.
+    - Unified APIs for diverse workloads.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Cons:&lt;/strong>
+    - Resource-intensive, especially for memory.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Alternatives:&lt;/strong>
+    - Hadoop MapReduce for cost-effective batch processing or cloud solutions like AWS EMR for managed services.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="hadoop-hdfs">Hadoop (HDFS)&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> Why prefer HDFS over cloud object storage like Amazon S3?&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong> HDFS offers high throughput and is well-suited for the big data ecosystem, particularly with other Hadoop components. It integrates seamlessly with our data processing engines like Spark and our metadata management through Iceberg. While cloud object storage solutions are great for scalability and cost-effectiveness, HDFS gives us more control over our data locality and performance, which is important for our time-sensitive analytical workloads.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Pros:&lt;/strong>
+    - Smooth integration with Hadoop-based tools.
+    - High throughput and performance.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Cons:&lt;/strong>
+    - Complexity in management and operations.
+    - Less elasticity than cloud storage.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Alternatives:&lt;/strong>
+    - Cloud solutions like Amazon S3 for scalability and simple operation.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="iceberg-1">Iceberg&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> How does Apache Iceberg improve large data table management and what are other options?&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong> Iceberg offers reliable, scalable management of big data tables, addressing issues with older file formats like concurrency, versioning, and schema evolution. Iceberg integrates well with Spark and Flink, allowing us to easily manage table formats on HDFS. One alternative is Apache Hive, but it has limitations with metadata scaling which Iceberg has been designed to overcome.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Pros:&lt;/strong>
+    - Efficient metadata management.
+    - Seamless schema evolution.
+    - Performance optimization through hidden partitioning.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Cons:&lt;/strong>
+    - Less mature compared to formats like Parquet.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Alternatives:&lt;/strong>
+    - Apache Hive for a traditional data warehouse approach, or Delta Lake for ACID transactions and building data pipelines.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="airflow-1">Airflow&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> Why Airflow over other workflow tools?&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong> Airflow excels at defining, scheduling, and monitoring complex data pipelines. Its ability to code workflows as Directed Acyclic Graphs (DAGs) offers flexibility and transparency we need. Moreover, Airflow&amp;rsquo;s user interface and community support are excellent. As an alternative, we considered Luigi and Apache NiFi, but Airflow&amp;rsquo;s abilities to integrate with our data stack and intuitive UI made it the ideal choice for us.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Pros:&lt;/strong>
+    - Flexibility with a Python-based programming model.
+    - Rich UI for management and monitoring.
+    - Broad integration with data processing tools.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Cons:&lt;/strong>
+    - Potential resource intensity for simple needs.
+    - Learning curve for non-Python familiar developers.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Alternatives:&lt;/strong>
+    - Luigi for simpler Python-centric workflows or Apache NiFi for a more visual-centric approach.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="presto-1">Presto&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Q:&lt;/strong> Why Presto for interactive querying against other technologies?&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>A:&lt;/strong> Presto&amp;rsquo;s distributed in-memory architecture enables us to perform high-speed, ad-hoc queries directly on our data lake without data movement. It&amp;rsquo;s flexible and supports a wide range of data sources, maintaining high performance for interactive analytics. We considered Apache Drill, but Presto&amp;rsquo;s SQL compatibility and performance made it the better fit for our diverse data requirements.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Pros:&lt;/strong>
+    - Fast querying over various data sources.
+    - Strong SQL support for diverse BI tools.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Cons:&lt;/strong>
+    - Costly for large datasets due to in-memory processing.
+    - Suboptimal for extended, complex queries.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Alternatives:&lt;/strong>
+    - Apache Drill for similar querying capabilities or managed cloud services like Amazon Athena for less operational involvement.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul></description></item></channel></rss>

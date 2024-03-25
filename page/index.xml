@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pages on A Cat Entertainer</title><link>https://blog.xiax.xyz/page/</link><description>Recent content in Pages on A Cat Entertainer</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 06 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://blog.xiax.xyz/page/index.xml" rel="self" type="application/rss+xml"/><item><title>Archives</title><link>https://blog.xiax.xyz/archives/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate><guid>https://blog.xiax.xyz/archives/</guid><description/></item><item><title>Apps</title><link>https://blog.xiax.xyz/apps/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://blog.xiax.xyz/apps/</guid><description>&lt;h1 id="some-web-apps-i-deployed-recently">Some Web Apps I deployed recently&lt;/h1>
+&lt;p>Some deployed on Vercel and Some on GCP Cloud Run (Nice to have scale to 0 from GCP)&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://calc.xiaofei.moe/" target="_blank" rel="noopener"
+>&lt;strong>Mahjong Hand Scorer&lt;/strong>&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://trainer.xiaofei.moe/" target="_blank" rel="noopener"
+>&lt;strong>Mahjong Hand Score Practice&lt;/strong>&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://typing.pangmao.moe/" target="_blank" rel="noopener"
+>&lt;strong>Typing Speed Test&lt;/strong>&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://jupy.pangmao.moe/" target="_blank" rel="noopener"
+>&lt;strong>JupyterLite Notebook App&lt;/strong>&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://mj.xiaofei.moe//" target="_blank" rel="noopener"
+>&lt;strong>HTML 5 Mahjong Game&lt;/strong>&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Links</title><link>https://blog.xiax.xyz/links/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://blog.xiax.xyz/links/</guid><description>&lt;p>To use this feature, add &lt;code>links&lt;/code> section to frontmatter.&lt;/p>
+&lt;p>This page&amp;rsquo;s frontmatter:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">links&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">title&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">GitHub&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">description&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">GitHub is the world&amp;#39;s largest software development platform.&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">website&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">title&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">TypeScript&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">description&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">TypeScript is a typed superset of JavaScript that compiles to plain JavaScript.&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">website&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://www.typescriptlang.org&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ts-logo-128.jpg&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>image&lt;/code> field accepts both local and external images.&lt;/p></description></item><item><title>Projects</title><link>https://blog.xiax.xyz/projects/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://blog.xiax.xyz/projects/</guid><description>&lt;h2 id="recent-projects">Recent Projects&lt;/h2>
+&lt;p>Recently I have been working on the following projects:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://github.com/xingfanxia/ChuanhuChatGPT" target="_blank" rel="noopener"
+>&lt;strong>ChuanhuGPT&lt;/strong>&lt;/a> A python webapp that enables users to interact with various kinds of LLMs from a single interface.&lt;/li>
+&lt;li>&lt;a class="link" href="https://github.com/xingfanxia/mahjong_hand_detection" target="_blank" rel="noopener"
+>&lt;strong>MahjongDetection&lt;/strong>&lt;/a> My first object detection project in a while, detect and recognize mahjong hands from a given image and calculate the score of the hand.&lt;/li>
+&lt;/ul></description></item><item><title>Search</title><link>https://blog.xiax.xyz/search/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://blog.xiax.xyz/search/</guid><description/></item></channel></rss>

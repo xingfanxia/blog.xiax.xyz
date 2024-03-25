@@ -1,0 +1,446 @@
+<!doctype html><html lang=en-us dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="Simplify Debts Introduction How to recreate the simplify debt from split wise What is Simplify Debts? Code Demo DFS Approach 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 from collections import defaultdict import math ''' O(n!"><title>How to recreate Split Wise's Simplify Debt Feature? (Draft, Work in Progress) </title><link rel=canonical href=https://blog.xiax.xyz/p/how-to-recreate-split-wises-simplify-debt-feature-draft-work-in-progress/><link rel=stylesheet href=/scss/style.min.3eb3ec85c4678737b7eff912dd406e23d3999d96facbe09744dc8f1364656d34.css><meta property='og:title' content="How to recreate Split Wise's Simplify Debt Feature? (Draft, Work in Progress) "><meta property='og:description' content="Simplify Debts Introduction How to recreate the simplify debt from split wise What is Simplify Debts? Code Demo DFS Approach 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 from collections import defaultdict import math ''' O(n!"><meta property='og:url' content='https://blog.xiax.xyz/p/how-to-recreate-split-wises-simplify-debt-feature-draft-work-in-progress/'><meta property='og:site_name' content='A Cat Entertainer'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='coding'><meta property='article:tag' content='technical_interview'><meta property='article:tag' content='algorithm'><meta property='article:tag' content='leetcode'><meta property='article:tag' content='graph'><meta property='article:tag' content='dfs'><meta property='article:published_time' content='2024-03-23T14:01:53+00:00'><meta property='article:modified_time' content='2024-03-23T14:01:53+00:00'><meta property='og:image' content='https://blog.xiax.xyz/p/how-to-recreate-split-wises-simplify-debt-feature-draft-work-in-progress/split_wise.png'><meta name=twitter:title content="How to recreate Split Wise's Simplify Debt Feature? (Draft, Work in Progress) "><meta name=twitter:description content="Simplify Debts Introduction How to recreate the simplify debt from split wise What is Simplify Debts? Code Demo DFS Approach 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 from collections import defaultdict import math ''' O(n!"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content='https://blog.xiax.xyz/p/how-to-recreate-split-wises-simplify-debt-feature-draft-work-in-progress/split_wise.png'><link rel="shortcut icon" href=/favicon.png><script async src="https://www.googletagmanager.com/gtag/js?id=G-DBH469RMWM"></script><script>var doNotTrack=!1;if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-DBH469RMWM",{anonymize_ip:!1})}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hu24609b204ce41225aec778067808461c_22211_300x0_resize_q75_box.jpeg width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🐱</span></figure><div class=site-meta><h1 class=site-name><a href=/>A Cat Entertainer</a></h1><h2 class=site-description>Engineer | Cat Entertainer | Photographer | Gamer</h2></div></header><ol class=social-menu><li><a href target=_blank rel=me><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg></a></li><li><a href=https://github.com/xingfanxia target=_blank title=GitHub rel=me><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://lightroom.adobe.com/u/xingfanxia target=_blank title=lightroom rel=me><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-camera"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 7h1a2 2 0 002-2 1 1 0 011-1h6a1 1 0 011 1 2 2 0 002 2h1a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9a2 2 0 012-2"/><path d="M9 13a3 3 0 106 0 3 3 0 00-6 0"/></svg></a></li><li><a href=https://www.linkedin.com/in/xingfanxia/ target=_blank title=linkedin rel=me><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-linkedin"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4m0 2a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M8 11v5"/><path d="M8 8v.01"/><path d="M12 16v-5"/><path d="M16 16v-3a2 2 0 00-4 0"/></svg></a></li><li><a href=https://xiax.xyz target=_blank title=mysite rel=me><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-palette"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 21a9 9 0 010-18c4.97.0 9 3.582 9 8 0 1.06-.474 2.078-1.318 2.828S17.693 15 16.5 15H14a2 2 0 00-1 3.75A1.3 1.3.0 0112 21"/><path d="M8.5 10.5m-1 0a1 1 0 102 0 1 1 0 10-2 0"/><path d="M12.5 7.5m-1 0a1 1 0 102 0 1 1 0 10-2 0"/><path d="M16.5 10.5m-1 0a1 1 0 102 0 1 1 0 10-2 0"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/archives/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/links/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li><a href=/apps><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-box"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3"/><path d="M12 12l8-4.5"/><path d="M12 12v9"/><path d="M12 12 4 7.5"/></svg>
+<span>Apps</span></a></li><li><a href=/projects><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-code"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 8l-4 4 4 4"/><path d="M17 8l4 4-4 4"/><path d="M14 4l-4 16"/></svg>
+<span>Projects</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">Table of contents</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#introduction>Introduction</a></li><li><a href=#what-is-simplify-debts>What is Simplify Debts?</a></li><li><a href=#code-demo-dfs-approach>Code Demo DFS Approach</a><ol><li><a href=#code-demo-graph-approach>Code Demo Graph Approach</a></li></ol></li><li><a href=#github-link>Github Link</a></li></ol></nav></div></section></aside><main class="main full-width"><article class="has-image main-article"><header class=article-header><div class=article-image><a href=/p/how-to-recreate-split-wises-simplify-debt-feature-draft-work-in-progress/><img src=/p/how-to-recreate-split-wises-simplify-debt-feature-draft-work-in-progress/split_wise_hud6757fae20a87920fc6a8f24d3f32c68_10011_800x0_resize_box_3.png srcset="/p/how-to-recreate-split-wises-simplify-debt-feature-draft-work-in-progress/split_wise_hud6757fae20a87920fc6a8f24d3f32c68_10011_800x0_resize_box_3.png 800w, /p/how-to-recreate-split-wises-simplify-debt-feature-draft-work-in-progress/split_wise_hud6757fae20a87920fc6a8f24d3f32c68_10011_1600x0_resize_box_3.png 1600w" width=800 height=420 loading=lazy alt="Featured image of post How to recreate Split Wise's Simplify Debt Feature? (Draft, Work in Progress) "></a></div><div class=article-details><header class=article-category><a href=/categories/technical_interview/>Technical_interview
+</a><a href=/categories/leetcode/>Leetcode</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/p/how-to-recreate-split-wises-simplify-debt-feature-draft-work-in-progress/>How to recreate Split Wise's Simplify Debt Feature? (Draft, Work in Progress)</a></h2></div><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Mar 23, 2024</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>5 minute read</time></div></footer></div></header><section class=article-content><h1 id=simplify-debts>Simplify Debts</h1><h2 id=introduction>Introduction</h2><p>How to recreate the simplify debt from split wise</p><h2 id=what-is-simplify-debts>What is Simplify Debts?</h2><h2 id=code-demo-dfs-approach>Code Demo DFS Approach</h2><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>collections</span> <span class=kn>import</span> <span class=n>defaultdict</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>math</span>
+</span></span><span class=line><span class=cl><span class=s1>&#39;&#39;&#39;
+</span></span></span><span class=line><span class=cl><span class=s1>O(n!) DFS Alogirthm
+</span></span></span><span class=line><span class=cl><span class=s1>&#39;&#39;&#39;</span>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>Solution</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>minTransfers</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>input_transactions</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=n>balance</span> <span class=o>=</span> <span class=n>defaultdict</span><span class=p>(</span><span class=nb>int</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>transactions</span> <span class=o>=</span> <span class=p>[]</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=n>trans</span> <span class=ow>in</span> <span class=n>input_transactions</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>amount</span> <span class=o>=</span> <span class=n>trans</span><span class=p>[</span><span class=s1>&#39;amount&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>            <span class=n>payer</span> <span class=o>=</span> <span class=n>trans</span><span class=p>[</span><span class=s1>&#39;payer&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>            <span class=n>payees</span> <span class=o>=</span> <span class=n>trans</span><span class=p>[</span><span class=s1>&#39;payees&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>            <span class=c1># Split the transaction amount among the payees (excluding the payer)</span>
+</span></span><span class=line><span class=cl>            <span class=n>per_person</span> <span class=o>=</span> <span class=nb>round</span><span class=p>(</span><span class=n>amount</span> <span class=o>/</span> <span class=nb>len</span><span class=p>(</span><span class=n>payees</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>            <span class=k>for</span> <span class=n>payee</span> <span class=ow>in</span> <span class=n>payees</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                <span class=n>transactions</span><span class=o>.</span><span class=n>append</span><span class=p>((</span><span class=n>payer</span><span class=p>,</span> <span class=n>payee</span><span class=p>,</span> <span class=n>per_person</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=n>from_</span><span class=p>,</span> <span class=n>to</span><span class=p>,</span> <span class=n>amt</span> <span class=ow>in</span> <span class=n>transactions</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>balance</span><span class=p>[</span><span class=n>to</span><span class=p>]</span> <span class=o>+=</span> <span class=n>amt</span>
+</span></span><span class=line><span class=cl>            <span class=n>balance</span><span class=p>[</span><span class=n>from_</span><span class=p>]</span> <span class=o>-=</span> <span class=n>amt</span>
+</span></span><span class=line><span class=cl>            
+</span></span><span class=line><span class=cl>        <span class=c1># Filter out zero balances and create a list of non-zero balances</span>
+</span></span><span class=line><span class=cl>        <span class=n>debts</span> <span class=o>=</span> <span class=nb>list</span><span class=p>(</span><span class=nb>filter</span><span class=p>(</span><span class=k>lambda</span> <span class=n>x</span><span class=p>:</span> <span class=n>x</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>,</span> <span class=n>balance</span><span class=o>.</span><span class=n>values</span><span class=p>()))</span>
+</span></span><span class=line><span class=cl>        <span class=n>people</span> <span class=o>=</span> <span class=nb>list</span><span class=p>(</span><span class=nb>filter</span><span class=p>(</span><span class=k>lambda</span> <span class=n>x</span><span class=p>:</span> <span class=n>balance</span><span class=p>[</span><span class=n>x</span><span class=p>]</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>,</span> <span class=n>balance</span><span class=o>.</span><span class=n>keys</span><span class=p>()))</span>
+</span></span><span class=line><span class=cl>        <span class=c1># Helper function to find the min transactions to settle starting from &#39;index&#39;</span>
+</span></span><span class=line><span class=cl>        <span class=k>def</span> <span class=nf>backtrack</span><span class=p>(</span><span class=n>index</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>            <span class=c1># Skip already settled accounts</span>
+</span></span><span class=line><span class=cl>            <span class=k>while</span> <span class=n>index</span> <span class=o>&lt;</span> <span class=nb>len</span><span class=p>(</span><span class=n>debts</span><span class=p>)</span> <span class=ow>and</span> <span class=n>debts</span><span class=p>[</span><span class=n>index</span><span class=p>]</span> <span class=o>==</span> <span class=mi>0</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                <span class=n>index</span> <span class=o>+=</span> <span class=mi>1</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=n>index</span> <span class=o>==</span> <span class=nb>len</span><span class=p>(</span><span class=n>debts</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>                <span class=k>return</span> <span class=p>[],</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            <span class=n>min_txns</span> <span class=o>=</span> <span class=n>math</span><span class=o>.</span><span class=n>inf</span>
+</span></span><span class=line><span class=cl>            <span class=n>min_trans_list</span> <span class=o>=</span> <span class=p>[]</span>
+</span></span><span class=line><span class=cl>            <span class=k>for</span> <span class=n>j</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=n>index</span> <span class=o>+</span> <span class=mi>1</span><span class=p>,</span> <span class=nb>len</span><span class=p>(</span><span class=n>debts</span><span class=p>)):</span>
+</span></span><span class=line><span class=cl>                <span class=c1># Pruning. debts[j] must be non zero and of different sign</span>
+</span></span><span class=line><span class=cl>                <span class=k>if</span> <span class=n>debts</span><span class=p>[</span><span class=n>j</span><span class=p>]</span> <span class=o>*</span> <span class=n>debts</span><span class=p>[</span><span class=n>index</span><span class=p>]</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                    <span class=c1># Temporarily settle the debt</span>
+</span></span><span class=line><span class=cl>                    <span class=n>debts</span><span class=p>[</span><span class=n>j</span><span class=p>]</span> <span class=o>+=</span> <span class=n>debts</span><span class=p>[</span><span class=n>index</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>                    <span class=n>next_trans_list</span><span class=p>,</span> <span class=n>num_txns</span> <span class=o>=</span> <span class=n>backtrack</span><span class=p>(</span><span class=n>index</span> <span class=o>+</span> <span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>                    <span class=c1># If better solution found, update the result</span>
+</span></span><span class=line><span class=cl>                    <span class=k>if</span> <span class=n>num_txns</span> <span class=o>+</span> <span class=mi>1</span> <span class=o>&lt;</span> <span class=n>min_txns</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                        <span class=n>min_txns</span> <span class=o>=</span> <span class=n>num_txns</span> <span class=o>+</span> <span class=mi>1</span>
+</span></span><span class=line><span class=cl>                        <span class=n>amt</span> <span class=o>=</span> <span class=nb>abs</span><span class=p>(</span><span class=n>debts</span><span class=p>[</span><span class=n>index</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>                        <span class=c1># Determine the payer and payee based on the sign of debts[index]</span>
+</span></span><span class=line><span class=cl>                        <span class=n>transaction</span> <span class=o>=</span> <span class=sa>f</span><span class=s2>&#34;</span><span class=si>{</span><span class=n>people</span><span class=p>[</span><span class=n>index</span><span class=p>]</span> <span class=k>if</span> <span class=n>debts</span><span class=p>[</span><span class=n>index</span><span class=p>]</span> <span class=o>&gt;</span> <span class=mi>0</span> <span class=k>else</span> <span class=n>people</span><span class=p>[</span><span class=n>j</span><span class=p>]</span><span class=si>}</span><span class=s2> pays </span><span class=si>{</span><span class=n>people</span><span class=p>[</span><span class=n>j</span><span class=p>]</span> <span class=k>if</span> <span class=n>debts</span><span class=p>[</span><span class=n>index</span><span class=p>]</span> <span class=o>&gt;</span> <span class=mi>0</span> <span class=k>else</span> <span class=n>people</span><span class=p>[</span><span class=n>index</span><span class=p>]</span><span class=si>}</span><span class=s2> $</span><span class=si>{</span><span class=n>amt</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>                        <span class=c1># Include current transaction in the list</span>
+</span></span><span class=line><span class=cl>                        <span class=n>min_trans_list</span> <span class=o>=</span> <span class=n>next_trans_list</span> <span class=o>+</span> <span class=p>[</span><span class=n>transaction</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>                    <span class=c1># Backtrack the temporary change</span>
+</span></span><span class=line><span class=cl>                    <span class=n>debts</span><span class=p>[</span><span class=n>j</span><span class=p>]</span> <span class=o>-=</span> <span class=n>debts</span><span class=p>[</span><span class=n>index</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>min_trans_list</span><span class=p>,</span> <span class=n>min_txns</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=n>transactions</span><span class=p>,</span> <span class=n>min_txns</span> <span class=o>=</span> <span class=n>backtrack</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>transactions</span><span class=p>,</span> <span class=n>min_txns</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Example usage:</span>
+</span></span><span class=line><span class=cl><span class=n>input_transactions</span> <span class=o>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s1>&#39;payer&#39;</span><span class=p>:</span> <span class=s1>&#39;xia&#39;</span><span class=p>,</span> <span class=s1>&#39;amount&#39;</span><span class=p>:</span> <span class=mi>15</span><span class=p>,</span> <span class=s1>&#39;payees&#39;</span><span class=p>:</span> <span class=p>[</span><span class=s1>&#39;xia&#39;</span><span class=p>,</span> <span class=s1>&#39;hao&#39;</span><span class=p>]},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s1>&#39;payer&#39;</span><span class=p>:</span> <span class=s1>&#39;hao&#39;</span><span class=p>,</span> <span class=s1>&#39;amount&#39;</span><span class=p>:</span> <span class=mi>62</span><span class=p>,</span> <span class=s1>&#39;payees&#39;</span><span class=p>:</span> <span class=p>[</span><span class=s1>&#39;xia&#39;</span><span class=p>,</span> <span class=s1>&#39;hao&#39;</span><span class=p>]}</span>
+</span></span><span class=line><span class=cl><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>solution</span> <span class=o>=</span> <span class=n>Solution</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=n>final_transactions</span> <span class=o>=</span> <span class=n>solution</span><span class=o>.</span><span class=n>minTransfers</span><span class=p>(</span><span class=n>input_transactions</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=n>final_transactions</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=code-demo-graph-approach>Code Demo Graph Approach</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span><span class=lnt>132
+</span><span class=lnt>133
+</span><span class=lnt>134
+</span><span class=lnt>135
+</span><span class=lnt>136
+</span><span class=lnt>137
+</span><span class=lnt>138
+</span><span class=lnt>139
+</span><span class=lnt>140
+</span><span class=lnt>141
+</span><span class=lnt>142
+</span><span class=lnt>143
+</span><span class=lnt>144
+</span><span class=lnt>145
+</span><span class=lnt>146
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>sys</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>re</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>argparse</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>typing</span> <span class=kn>import</span> <span class=n>List</span><span class=p>,</span> <span class=n>Dict</span><span class=p>,</span> <span class=n>Tuple</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>NodeError</span><span class=p>(</span><span class=ne>Exception</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>pass</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>EdgeException</span><span class=p>(</span><span class=ne>Exception</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>pass</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>Edge</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=fm>__init__</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>start_node</span><span class=p>:</span> <span class=nb>str</span><span class=p>,</span> <span class=n>end_node</span><span class=p>:</span> <span class=nb>str</span><span class=p>,</span> <span class=n>weight</span><span class=p>:</span> <span class=nb>float</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=o>.</span><span class=n>start_node</span> <span class=o>=</span> <span class=n>start_node</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=o>.</span><span class=n>end_node</span> <span class=o>=</span> <span class=n>end_node</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=o>.</span><span class=n>weight</span> <span class=o>=</span> <span class=n>weight</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>to_graphviz_string</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>str</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=sa>f</span><span class=s1>&#39;</span><span class=si>{</span><span class=bp>self</span><span class=o>.</span><span class=n>start_node</span><span class=si>}</span><span class=s1> -&gt; </span><span class=si>{</span><span class=bp>self</span><span class=o>.</span><span class=n>end_node</span><span class=si>}</span><span class=s1> [ label=&#34;</span><span class=si>{</span><span class=nb>round</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>weight</span><span class=p>,</span> <span class=mi>2</span><span class=p>)</span><span class=si>}</span><span class=s1>&#34; ];&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=fm>__str__</span><span class=p>(</span><span class=bp>self</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>str</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=sa>f</span><span class=s1>&#39;</span><span class=si>{</span><span class=bp>self</span><span class=o>.</span><span class=n>start_node</span><span class=si>}</span><span class=s1> -&gt; </span><span class=si>{</span><span class=bp>self</span><span class=o>.</span><span class=n>end_node</span><span class=si>}</span><span class=s1>: </span><span class=si>{</span><span class=nb>round</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>weight</span><span class=p>,</span> <span class=mi>2</span><span class=p>)</span><span class=si>}</span><span class=s1>&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>normalize</span><span class=p>(</span><span class=bp>self</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>weight</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=bp>self</span><span class=o>.</span><span class=n>weight</span> <span class=o>*=</span> <span class=o>-</span><span class=mi>1</span>
+</span></span><span class=line><span class=cl>            <span class=bp>self</span><span class=o>.</span><span class=n>start_node</span><span class=p>,</span> <span class=bp>self</span><span class=o>.</span><span class=n>end_node</span> <span class=o>=</span> <span class=bp>self</span><span class=o>.</span><span class=n>end_node</span><span class=p>,</span> <span class=bp>self</span><span class=o>.</span><span class=n>start_node</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>print_edges</span><span class=p>(</span><span class=n>edges</span><span class=p>:</span> <span class=n>List</span><span class=p>[</span><span class=n>Edge</span><span class=p>],</span> <span class=n>graphviz</span><span class=p>:</span> <span class=nb>bool</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>graphviz</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;digraph G {&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>edge</span> <span class=ow>in</span> <span class=n>edges</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>edge</span><span class=o>.</span><span class=n>normalize</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=n>edge</span><span class=o>.</span><span class=n>to_graphviz_string</span><span class=p>()</span> <span class=k>if</span> <span class=n>graphviz</span> <span class=k>else</span> <span class=nb>str</span><span class=p>(</span><span class=n>edge</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>graphviz</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;}&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>add_weight</span><span class=p>(</span><span class=n>weights</span><span class=p>:</span> <span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=nb>float</span><span class=p>],</span> <span class=n>node_name</span><span class=p>:</span> <span class=nb>str</span><span class=p>,</span> <span class=n>weight_delta</span><span class=p>:</span> <span class=nb>float</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>weights</span><span class=p>[</span><span class=n>node_name</span><span class=p>]</span> <span class=o>=</span> <span class=n>weights</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>node_name</span><span class=p>,</span> <span class=mi>0</span><span class=p>)</span> <span class=o>+</span> <span class=n>weight_delta</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>sort_weights</span><span class=p>(</span><span class=n>weights</span><span class=p>:</span> <span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=nb>float</span><span class=p>])</span> <span class=o>-&gt;</span> <span class=n>List</span><span class=p>[</span><span class=n>Tuple</span><span class=p>[</span><span class=nb>float</span><span class=p>,</span> <span class=nb>str</span><span class=p>]]:</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nb>sorted</span><span class=p>([(</span><span class=n>value</span><span class=p>,</span> <span class=n>key</span><span class=p>)</span> <span class=k>for</span> <span class=n>key</span><span class=p>,</span> <span class=n>value</span> <span class=ow>in</span> <span class=n>weights</span><span class=o>.</span><span class=n>items</span><span class=p>()])</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>get_node_weights</span><span class=p>(</span><span class=n>edges</span><span class=p>:</span> <span class=n>List</span><span class=p>[</span><span class=n>Edge</span><span class=p>])</span> <span class=o>-&gt;</span> <span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=nb>float</span><span class=p>]:</span>
+</span></span><span class=line><span class=cl>    <span class=n>weights</span> <span class=o>=</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>edge</span> <span class=ow>in</span> <span class=n>edges</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>add_weight</span><span class=p>(</span><span class=n>weights</span><span class=p>,</span> <span class=n>edge</span><span class=o>.</span><span class=n>end_node</span><span class=p>,</span> <span class=n>edge</span><span class=o>.</span><span class=n>weight</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>add_weight</span><span class=p>(</span><span class=n>weights</span><span class=p>,</span> <span class=n>edge</span><span class=o>.</span><span class=n>start_node</span><span class=p>,</span> <span class=o>-</span><span class=n>edge</span><span class=o>.</span><span class=n>weight</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>weights</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>find_greater_weight</span><span class=p>(</span><span class=n>weight_comp</span><span class=p>:</span> <span class=nb>float</span><span class=p>,</span> <span class=n>weights</span><span class=p>:</span> <span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=nb>float</span><span class=p>])</span> <span class=o>-&gt;</span> <span class=nb>str</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>node</span><span class=p>,</span> <span class=n>weight</span> <span class=ow>in</span> <span class=n>weights</span><span class=o>.</span><span class=n>items</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>weight</span> <span class=o>&gt;=</span> <span class=n>weight_comp</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>node</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=kc>None</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>weights_to_edges</span><span class=p>(</span><span class=n>sorted_weights</span><span class=p>:</span> <span class=n>List</span><span class=p>[</span><span class=n>Tuple</span><span class=p>[</span><span class=nb>float</span><span class=p>,</span> <span class=nb>str</span><span class=p>]],</span> <span class=n>weights</span><span class=p>:</span> <span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=nb>float</span><span class=p>])</span> <span class=o>-&gt;</span> <span class=n>List</span><span class=p>[</span><span class=n>Edge</span><span class=p>]:</span>
+</span></span><span class=line><span class=cl>    <span class=n>edges</span> <span class=o>=</span> <span class=p>[]</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=nb>len</span><span class=p>(</span><span class=n>sorted_weights</span><span class=p>)</span> <span class=o>-</span> <span class=mi>1</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=n>current_node</span> <span class=o>=</span> <span class=n>sorted_weights</span><span class=p>[</span><span class=n>i</span><span class=p>][</span><span class=mi>1</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>        <span class=n>current_weight</span> <span class=o>=</span> <span class=n>weights</span><span class=p>[</span><span class=n>current_node</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>current_weight</span> <span class=o>==</span> <span class=mi>0</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=k>continue</span>
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>        <span class=n>transact</span> <span class=o>=</span> <span class=nb>abs</span><span class=p>(</span><span class=n>current_weight</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>target</span> <span class=o>=</span> <span class=n>find_greater_weight</span><span class=p>(</span><span class=n>transact</span><span class=p>,</span> <span class=n>weights</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>target</span> <span class=ow>is</span> <span class=kc>None</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>target</span> <span class=o>=</span> <span class=n>sorted_weights</span><span class=p>[</span><span class=n>i</span> <span class=o>+</span> <span class=mi>1</span><span class=p>][</span><span class=mi>1</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>        <span class=n>edges</span><span class=o>.</span><span class=n>append</span><span class=p>(</span><span class=n>Edge</span><span class=p>(</span><span class=n>current_node</span><span class=p>,</span> <span class=n>target</span><span class=p>,</span> <span class=n>transact</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>        <span class=n>weights</span><span class=p>[</span><span class=n>target</span><span class=p>]</span> <span class=o>+=</span> <span class=n>current_weight</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>edges</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>remove_zero_weights</span><span class=p>(</span><span class=n>weights</span><span class=p>:</span> <span class=n>List</span><span class=p>[</span><span class=n>Tuple</span><span class=p>[</span><span class=nb>float</span><span class=p>,</span> <span class=nb>str</span><span class=p>]]):</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>[</span><span class=n>w</span> <span class=k>for</span> <span class=n>w</span> <span class=ow>in</span> <span class=n>weights</span> <span class=k>if</span> <span class=n>w</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>split_star_nodes</span><span class=p>(</span><span class=n>edges</span><span class=p>:</span> <span class=n>List</span><span class=p>[</span><span class=n>Edge</span><span class=p>],</span> <span class=n>empty_nodes</span><span class=p>:</span> <span class=n>List</span><span class=p>[</span><span class=nb>str</span><span class=p>],</span> <span class=n>verbose</span><span class=p>:</span> <span class=nb>bool</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=n>List</span><span class=p>[</span><span class=n>Edge</span><span class=p>]:</span>
+</span></span><span class=line><span class=cl>    <span class=n>nodes</span> <span class=o>=</span> <span class=nb>list</span><span class=p>(</span><span class=nb>set</span><span class=p>(</span><span class=n>empty_nodes</span> <span class=o>+</span> <span class=p>[</span><span class=n>edge</span><span class=o>.</span><span class=n>start_node</span> <span class=k>for</span> <span class=n>edge</span> <span class=ow>in</span> <span class=n>edges</span> <span class=k>if</span> <span class=n>edge</span><span class=o>.</span><span class=n>start_node</span> <span class=o>!=</span> <span class=s2>&#34;*&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>                                  <span class=o>+</span> <span class=p>[</span><span class=n>edge</span><span class=o>.</span><span class=n>end_node</span> <span class=k>for</span> <span class=n>edge</span> <span class=ow>in</span> <span class=n>edges</span> <span class=k>if</span> <span class=n>edge</span><span class=o>.</span><span class=n>end_node</span> <span class=o>!=</span> <span class=s2>&#34;*&#34;</span><span class=p>]))</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>verbose</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;Found these </span><span class=si>{</span><span class=nb>len</span><span class=p>(</span><span class=n>nodes</span><span class=p>)</span><span class=si>}</span><span class=s2> unique nodes: </span><span class=si>{</span><span class=n>nodes</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>new_edges</span> <span class=o>=</span> <span class=p>[]</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>edge</span> <span class=ow>in</span> <span class=n>edges</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>edge</span><span class=o>.</span><span class=n>start_node</span> <span class=o>==</span> <span class=s2>&#34;*&#34;</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>new_edges</span><span class=o>.</span><span class=n>extend</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>                <span class=n>Edge</span><span class=p>(</span><span class=n>node</span><span class=p>,</span> <span class=n>edge</span><span class=o>.</span><span class=n>end_node</span><span class=p>,</span> <span class=n>edge</span><span class=o>.</span><span class=n>weight</span> <span class=o>/</span> <span class=nb>len</span><span class=p>(</span><span class=n>nodes</span><span class=p>))</span> 
+</span></span><span class=line><span class=cl>                <span class=k>for</span> <span class=n>node</span> <span class=ow>in</span> <span class=n>nodes</span> <span class=k>if</span> <span class=n>node</span> <span class=o>!=</span> <span class=n>edge</span><span class=o>.</span><span class=n>end_node</span>
+</span></span><span class=line><span class=cl>            <span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>elif</span> <span class=n>edge</span><span class=o>.</span><span class=n>end_node</span> <span class=o>==</span> <span class=s2>&#34;*&#34;</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>new_edges</span><span class=o>.</span><span class=n>extend</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>                <span class=n>Edge</span><span class=p>(</span><span class=n>edge</span><span class=o>.</span><span class=n>start_node</span><span class=p>,</span> <span class=n>node</span><span class=p>,</span> <span class=n>edge</span><span class=o>.</span><span class=n>weight</span> <span class=o>/</span> <span class=nb>len</span><span class=p>(</span><span class=n>nodes</span><span class=p>))</span> 
+</span></span><span class=line><span class=cl>                <span class=k>for</span> <span class=n>node</span> <span class=ow>in</span> <span class=n>nodes</span> <span class=k>if</span> <span class=n>node</span> <span class=o>!=</span> <span class=n>edge</span><span class=o>.</span><span class=n>start_node</span>
+</span></span><span class=line><span class=cl>            <span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>else</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>new_edges</span><span class=o>.</span><span class=n>append</span><span class=p>(</span><span class=n>edge</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>new_edges</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>SEARCH_COMMENT</span> <span class=o>=</span> <span class=n>re</span><span class=o>.</span><span class=n>compile</span><span class=p>(</span><span class=s2>&#34;^(#| *$)&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>SEARCH_EDGE</span> <span class=o>=</span> <span class=n>re</span><span class=o>.</span><span class=n>compile</span><span class=p>(</span><span class=s2>&#34;(\w+|\*) *-&gt; *(\w+|\*): *([0-9]+(\.[0-9]+)?)&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>SEARCH_NODE</span> <span class=o>=</span> <span class=n>re</span><span class=o>.</span><span class=n>compile</span><span class=p>(</span><span class=s2>&#34;^(\w+)$&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>parse_edge</span><span class=p>(</span><span class=n>line</span><span class=p>:</span> <span class=nb>str</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=n>Edge</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=n>m</span> <span class=o>=</span> <span class=n>SEARCH_EDGE</span><span class=o>.</span><span class=k>match</span><span class=p>(</span><span class=n>line</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>m</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>start_node</span><span class=p>,</span> <span class=n>end_node</span><span class=p>,</span> <span class=n>weight</span> <span class=o>=</span> <span class=n>m</span><span class=o>.</span><span class=n>groups</span><span class=p>()[:</span><span class=mi>3</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>Edge</span><span class=p>(</span><span class=n>start_node</span><span class=p>,</span> <span class=n>end_node</span><span class=p>,</span> <span class=nb>float</span><span class=p>(</span><span class=n>weight</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>    <span class=k>raise</span> <span class=n>EdgeException</span><span class=p>(</span><span class=s2>&#34;Invalid input line&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=vm>__name__</span> <span class=o>==</span> <span class=s2>&#34;__main__&#34;</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=n>argparser</span> <span class=o>=</span> <span class=n>argparse</span><span class=o>.</span><span class=n>ArgumentParser</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=n>argparser</span><span class=o>.</span><span class=n>add_argument</span><span class=p>(</span><span class=s2>&#34;-g&#34;</span><span class=p>,</span> <span class=s2>&#34;--graphviz&#34;</span><span class=p>,</span> <span class=n>action</span><span class=o>=</span><span class=s1>&#39;store_true&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>argparser</span><span class=o>.</span><span class=n>add_argument</span><span class=p>(</span><span class=s2>&#34;-v&#34;</span><span class=p>,</span> <span class=s2>&#34;--verbose&#34;</span><span class=p>,</span> <span class=n>action</span><span class=o>=</span><span class=s1>&#39;store_true&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>argparser</span><span class=o>.</span><span class=n>add_argument</span><span class=p>(</span><span class=s2>&#34;filename&#34;</span><span class=p>,</span> <span class=n>nargs</span><span class=o>=</span><span class=s1>&#39;?&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>args</span> <span class=o>=</span> <span class=n>argparser</span><span class=o>.</span><span class=n>parse_args</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>edges</span> <span class=o>=</span> <span class=p>[]</span>
+</span></span><span class=line><span class=cl>    <span class=n>empty_nodes</span> <span class=o>=</span> <span class=p>[]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>with</span> <span class=nb>open</span><span class=p>(</span><span class=n>args</span><span class=o>.</span><span class=n>filename</span><span class=p>)</span> <span class=k>if</span> <span class=n>args</span><span class=o>.</span><span class=n>filename</span> <span class=k>else</span> <span class=n>sys</span><span class=o>.</span><span class=n>stdin</span> <span class=k>as</span> <span class=n>input_file</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=n>i</span><span class=p>,</span> <span class=n>line</span> <span class=ow>in</span> <span class=nb>enumerate</span><span class=p>(</span><span class=n>input_file</span><span class=p>,</span> <span class=mi>1</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>            <span class=k>try</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                <span class=n>edges</span><span class=o>.</span><span class=n>append</span><span class=p>(</span><span class=n>parse_edge</span><span class=p>(</span><span class=n>line</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>            <span class=k>except</span> <span class=n>EdgeException</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                <span class=k>if</span> <span class=n>SEARCH_NODE</span><span class=o>.</span><span class=k>match</span><span class=p>(</span><span class=n>line</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>                    <span class=n>empty_nodes</span><span class=o>.</span><span class=n>append</span><span class=p>(</span><span class=n>line</span><span class=o>.</span><span class=n>strip</span><span class=p>())</span>
+</span></span><span class=line><span class=cl>                <span class=k>elif</span> <span class=ow>not</span> <span class=n>SEARCH_COMMENT</span><span class=o>.</span><span class=k>match</span><span class=p>(</span><span class=n>line</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>                    <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;Invalid input on line </span><span class=si>{</span><span class=n>i</span><span class=si>}</span><span class=s2>: </span><span class=si>{</span><span class=n>line</span><span class=o>.</span><span class=n>strip</span><span class=p>()</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>,</span> <span class=n>file</span><span class=o>=</span><span class=n>sys</span><span class=o>.</span><span class=n>stderr</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>                    <span class=n>sys</span><span class=o>.</span><span class=n>exit</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>edges</span> <span class=o>=</span> <span class=n>split_star_nodes</span><span class=p>(</span><span class=n>edges</span><span class=p>,</span> <span class=n>empty_nodes</span><span class=p>,</span> <span class=n>args</span><span class=o>.</span><span class=n>verbose</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>weights</span> <span class=o>=</span> <span class=n>get_node_weights</span><span class=p>(</span><span class=n>edges</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>sorted_weights</span> <span class=o>=</span> <span class=n>sort_weights</span><span class=p>(</span><span class=n>weights</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>sorted_weights</span> <span class=o>=</span> <span class=n>remove_zero_weights</span><span class=p>(</span><span class=n>sorted_weights</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># Optionally perform a consistency check if verbose</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>args</span><span class=o>.</span><span class=n>verbose</span> <span class=ow>and</span> <span class=n>sorted_weights</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>assert</span> <span class=nb>round</span><span class=p>(</span><span class=nb>sum</span><span class=p>(</span><span class=n>weight</span> <span class=k>for</span> <span class=n>weight</span><span class=p>,</span> <span class=n>_</span> <span class=ow>in</span> <span class=n>sorted_weights</span><span class=p>),</span> <span class=mi>10</span><span class=p>)</span> <span class=o>==</span> <span class=mf>0.0</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;Node weights: &#34;</span><span class=p>,</span> <span class=n>sorted_weights</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>edges</span> <span class=o>=</span> <span class=n>weights_to_edges</span><span class=p>(</span><span class=n>sorted_weights</span><span class=p>,</span> <span class=n>weights</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>args</span><span class=o>.</span><span class=n>verbose</span> <span class=ow>and</span> <span class=n>edges</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>total_money_transacted</span> <span class=o>=</span> <span class=nb>sum</span><span class=p>(</span><span class=n>edge</span><span class=o>.</span><span class=n>weight</span> <span class=k>for</span> <span class=n>edge</span> <span class=ow>in</span> <span class=n>edges</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;Total money transacted: </span><span class=si>{</span><span class=n>total_money_transacted</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=n>print_edges</span><span class=p>(</span><span class=n>edges</span><span class=p>,</span> <span class=n>args</span><span class=o>.</span><span class=n>graphviz</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=github-link>Github Link</h2></section><footer class=article-footer><section class=article-tags><a href=/tags/coding/>Coding</a>
+<a href=/tags/technical_interview/>Technical_interview</a>
+<a href=/tags/algorithm/>Algorithm</a>
+<a href=/tags/leetcode/>Leetcode</a>
+<a href=/tags/graph/>Graph</a>
+<a href=/tags/dfs/>Dfs</a></section><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><script src=https://giscus.app/client.js data-repo=xingfanxia/blog.xiax.xyz data-repo-id=R_kgDOLkaUkg data-category=Announcements data-category-id=DIC_kwDOLkaUks4CeNSA data-mapping=title data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=top data-theme=light data-lang=en crossorigin=anonymous async></script><script>function setGiscusTheme(e){let t=document.querySelector("iframe.giscus-frame");t&&t.contentWindow.postMessage({giscus:{setConfig:{theme:e}}},"https://giscus.app")}(function(){addEventListener("message",t=>{if(event.origin!=="https://giscus.app")return;e()}),window.addEventListener("onColorSchemeChange",e);function e(){setGiscusTheme(document.documentElement.dataset.scheme==="light"?"light":"dark")}})()</script><footer class=site-footer><section class=copyright>&copy;
+2024 A Cat Entertainer</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.24.2>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

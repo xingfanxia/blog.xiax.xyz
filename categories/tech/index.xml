@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tech on A Cat Entertainer</title><link>https://blog.xiax.xyz/categories/tech/</link><description>Recent content in Tech on A Cat Entertainer</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 24 Mar 2024 02:42:56 -0700</lastBuildDate><atom:link href="https://blog.xiax.xyz/categories/tech/index.xml" rel="self" type="application/rss+xml"/><item><title>Iceberg 101 - Chapter 1 The Problem &amp; Solution Behind Iceberg's Origin</title><link>https://blog.xiax.xyz/p/iceberg-101-chapter-1-the-problem-solution-behind-icebergs-origin/</link><pubDate>Sun, 24 Mar 2024 02:42:56 -0700</pubDate><guid>https://blog.xiax.xyz/p/iceberg-101-chapter-1-the-problem-solution-behind-icebergs-origin/</guid><description>&lt;img src="https://blog.xiax.xyz/p/iceberg-101-chapter-1-the-problem-solution-behind-icebergs-origin/iceberg.webp" alt="Featured image of post Iceberg 101 - Chapter 1 The Problem &amp; Solution Behind Iceberg's Origin" />&lt;h1 id="the-problem--solution-behind-icebergs-origin">The Problem &amp;amp; Solution Behind Iceberg&amp;rsquo;s Origin&lt;/h1>
+&lt;aside>
+💡 — What’s the problem and Why Iceberg?
+&lt;/aside>
+&lt;h2 id="what-is-a-data-lake">What is a data lake?&lt;/h2>
+&lt;ul>
+&lt;li>A data lake is a central location that holds a large amount of data in its native, raw format.&lt;/li>
+&lt;li>Compared to a hierarchical data warehouse, which stores data in files or folders, a data lake uses a flat architecture and object storage to store the data.‍&lt;/li>
+&lt;li>Object storage stores data with metadata tags and a unique identifier, which makes it easier to locate and retrieve data across regions, and improves performance.&lt;/li>
+&lt;li>By leveraging inexpensive object storage and open formats, data lakes enable many applications to take advantage of the data.&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://blog.xiax.xyz/p/iceberg-101-chapter-1-the-problem-solution-behind-icebergs-origin/datalake_comparison.png"
+width="1214"
+height="1252"
+srcset="https://blog.xiax.xyz/p/iceberg-101-chapter-1-the-problem-solution-behind-icebergs-origin/datalake_comparison_huaecf6477792216b678d3d0355414fc00_241512_480x0_resize_box_3.png 480w, https://blog.xiax.xyz/p/iceberg-101-chapter-1-the-problem-solution-behind-icebergs-origin/datalake_comparison_huaecf6477792216b678d3d0355414fc00_241512_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Datalake Comparison"
+class="gallery-image"
+data-flex-grow="96"
+data-flex-basis="232px"
+>&lt;/p>
+&lt;h2 id="whats-a-table-format">What’s a table format?&lt;/h2>
+&lt;ul>
+&lt;li>A way to organize a datalake’s files to present them as a single table&lt;/li>
+&lt;li>A way to answer the question — what data is in this table&lt;/li>
+&lt;li>So user can query a bunch of files in a data lake (a bunch of files) just like a database or data warehouse
+&lt;ul>
+&lt;li>Extension on datalake
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://www.databricks.com/discover/data-lakes" target="_blank" rel="noopener"
+>https://www.databricks.com/discover/data-lakes&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="the-old-de-facto-standard--hive">The old de-facto standard — Hive&lt;/h2>
+&lt;p>&lt;img src="https://blog.xiax.xyz/p/iceberg-101-chapter-1-the-problem-solution-behind-icebergs-origin/hive_defacto.png"
+width="1307"
+height="477"
+srcset="https://blog.xiax.xyz/p/iceberg-101-chapter-1-the-problem-solution-behind-icebergs-origin/hive_defacto_hu18ec1c92615a0c15ef327e50199a17ce_146804_480x0_resize_box_3.png 480w, https://blog.xiax.xyz/p/iceberg-101-chapter-1-the-problem-solution-behind-icebergs-origin/hive_defacto_hu18ec1c92615a0c15ef327e50199a17ce_146804_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Hive Defacto"
+class="gallery-image"
+data-flex-grow="274"
+data-flex-basis="657px"
+>&lt;/p>
+&lt;h3 id="origin-of-hive">Origin of Hive&lt;/h3>
+&lt;ul>
+&lt;li>Originated from Facebook.&lt;/li>
+&lt;li>In early days of datalakes, engineers have to write map reduce java code to interact with their Hadoop cluster.&lt;/li>
+&lt;li>Hive is create to make life easier for people, instead of having to write java code, Hive translate the SQL into MapReduce scripts.&lt;/li>
+&lt;li>To do that, we need a way to recognize files as tables.&lt;/li>
+&lt;li>The approach Hive took is a directory-based approach. Where it would just treat a folder on a Hadoop cluster as a table. And subfolders will be partitions.&lt;/li>
+&lt;/ul>
+&lt;h3 id="pros-of-hive">Pros of Hive&lt;/h3>
+&lt;ul>
+&lt;li>More efficient access patterns than full-table scans for every query (Better latency &amp;amp; Cost)&lt;/li>
+&lt;li>Works with basically every engine since it’s been the de-facto standard for so long.&lt;/li>
+&lt;li>File format agnostic&lt;/li>
+&lt;li>Atomically update a whole partition (ACID guanrantee)&lt;/li>
+&lt;li>Single, central answer to “what data is in this table” for the whole datalake ecosystem&lt;/li>
+&lt;/ul>
+&lt;h3 id="cons-of-hive">Cons of Hive&lt;/h3>
+&lt;ul>
+&lt;li>Smaller updates are very inefficient&lt;/li>
+&lt;li>No way to change data in multiple partitions safely&lt;/li>
+&lt;li>In practice, Unsafe concurrent partition modifications&lt;/li>
+&lt;li>All of the directory listings needed for large tables take a long time.
+&lt;ul>
+&lt;li>Extra effort needed to speed up a query: indexing, more processing power, materializing&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Users have to know the physical Layout of the table to take advantage of performance benefits of partitioning&lt;/li>
+&lt;li>Hive table statics are often stale, and updating statics(with Analyze) is very slow&lt;/li>
+&lt;/ul>
+&lt;h2 id="how-to-resolve-the-issues-with-hive">How to resolve the issues with Hive?&lt;/h2>
+&lt;p>Netflix having issues with Hive and in need of a new table format.&lt;/p>
+&lt;h3 id="netflixs-goals">Netflix’s Goals&lt;/h3>
+&lt;ul>
+&lt;li>Table correctness/consistency&lt;/li>
+&lt;li>Faster query planning and execution&lt;/li>
+&lt;li>Allow users to not worry about the physical layout of the table&lt;/li>
+&lt;li>Table evolution support. (Flexible schema, partitioning changes)&lt;/li>
+&lt;li>Achieve all above at scale.&lt;/li>
+&lt;/ul>
+&lt;h3 id="the-answer--iceberg-and-what-is-it">The answer — Iceberg and what is it&lt;/h3>
+&lt;p>&lt;img src="https://blog.xiax.xyz/p/iceberg-101-chapter-1-the-problem-solution-behind-icebergs-origin/iceberg_files.png"
+width="1063"
+height="197"
+srcset="https://blog.xiax.xyz/p/iceberg-101-chapter-1-the-problem-solution-behind-icebergs-origin/iceberg_files_hu1b7f01b24a620f04fdd21c8d5bb12f2e_51110_480x0_resize_box_3.png 480w, https://blog.xiax.xyz/p/iceberg-101-chapter-1-the-problem-solution-behind-icebergs-origin/iceberg_files_hu1b7f01b24a620f04fdd21c8d5bb12f2e_51110_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="iceberg_files"
+class="gallery-image"
+data-flex-grow="539"
+data-flex-basis="1295px"
+>&lt;/p>
+&lt;h3 id="what-is-iceberg-">What is Iceberg? ✅&lt;/h3>
+&lt;ul>
+&lt;li>Table format specification&lt;/li>
+&lt;li>A set of APIs and libraries for interaction with that specification
+&lt;ul>
+&lt;li>These libraries are leveraged in other engines and tools that allow them to interact with Iceberg tables&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="what-iceberg-is-not-">What Iceberg is not? ❌&lt;/h3>
+&lt;ul>
+&lt;li>Not a storage engine&lt;/li>
+&lt;li>Not an execution engine&lt;/li>
+&lt;li>Not a service&lt;/li>
+&lt;/ul>
+&lt;h3 id="design-benefits-of-iceberg">Design Benefits of Iceberg&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>Efficiently make smaller updates&lt;/p>
+&lt;ul>
+&lt;li>Making changes at the file level instead of directory level&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Snapshot Isolation for transactions&lt;/p>
+&lt;ul>
+&lt;li>Reads and writes don’t interfere with each other and all writes are atomic
+&lt;ul>
+&lt;li>Anytime the table changes, a snapshot is created.&lt;/li>
+&lt;li>Any read will be on the same latest snapshot&lt;/li>
+&lt;li>Any write will result in a sequence of write&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Concurrent writes&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Faster planning and execution (Fresh metadata and statistics)&lt;/p>
+&lt;ul>
+&lt;li>List of files defined on the write-side&lt;/li>
+&lt;li>Column stats in manifest files on the write-side&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Reliable metrics for CBOs&lt;/p>
+&lt;ul>
+&lt;li>Done on write instead of “infrequent” expensive read job (Analyze)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Abstract the physical, expose a logical view&lt;/p>
+&lt;ul>
+&lt;li>Hidden partitioning, ppl don’t need to care how the files are stored physically, they just need to know the logical layout as it’s stored in the manifest (list of files and organization of these files)&lt;/li>
+&lt;li>Enables Compaction
+&lt;ul>
+&lt;li>built-in tools to optimize small files comes from streaming → better performance&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Tables can change over time (schema and partitions)&lt;/li>
+&lt;li>Can rollback snapshots&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Rich schema evolution support&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>All engines see changes immediately and can work together&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Community&lt;/p>
+&lt;p>&lt;img src="https://blog.xiax.xyz/p/iceberg-101-chapter-1-the-problem-solution-behind-icebergs-origin/iceberg_community.png"
+width="2171"
+height="1074"
+srcset="https://blog.xiax.xyz/p/iceberg-101-chapter-1-the-problem-solution-behind-icebergs-origin/iceberg_community_hudac480157649b8c789a69fffd54409e6_831978_480x0_resize_box_3.png 480w, https://blog.xiax.xyz/p/iceberg-101-chapter-1-the-problem-solution-behind-icebergs-origin/iceberg_community_hudac480157649b8c789a69fffd54409e6_831978_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Iceberg Community"
+class="gallery-image"
+data-flex-grow="202"
+data-flex-basis="485px"
+>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="reference">Reference:&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=cI9zu5Rk_bQ" target="_blank" rel="noopener"
+>Apache Iceberg Tutorial: Learn the Problem &amp;amp; Solution Behind Iceberg&amp;rsquo;s Origin Story&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.databricks.com/discover/data-lakes" target="_blank" rel="noopener"
+>Databrick&amp;rsquo;s take on datalakes&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.databricks.com/glossary/materialized-views" target="_blank" rel="noopener"
+>Databrick&amp;rsquo;s take on materialized views&lt;/a>&lt;/li>
+&lt;/ul></description></item></channel></rss>
