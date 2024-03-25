@@ -12,10 +12,11 @@ weight: 2
 tags:
     - iceberg
     - datalake
-    - data-lakehouse
+    - data
 categories:
     - engineering
-    - techstack
+    - learning
+    - tech
 ---
 
 # The Problem & Solution Behind Iceberg's Origin

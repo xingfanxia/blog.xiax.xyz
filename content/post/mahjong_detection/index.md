@@ -18,6 +18,8 @@ tags:
 categories:
     - mahjong
     - AI+ML
+    - learning
+    - games
 ---
 
 # Mahjong Detection with Yolo Models

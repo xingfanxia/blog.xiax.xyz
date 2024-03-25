@@ -10,11 +10,12 @@ comments: true
 draft: false
 tags:
     - docker
-    - cloud_run
+    - cloud Run
+    - GCP
     - vercel
     - railway
     - netlify
 categories:
     - engineering
-    - dev
+    - learning
 ---

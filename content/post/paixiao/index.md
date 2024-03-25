@@ -15,9 +15,10 @@ tags:
 categories:
     - mahjong
     - games
+    - learning
 ---
 
-# 日麻 牌效率学习 (门清一般型)
+# 立直麻将 牌效率学习 (门清一般型)
 
 [(大概)很好懂的牌效率](https://www.youtube.com/playlist?list=PLAOMOhCKGh68V0R4NGHL5u0WKkd9BL-PM)
 
